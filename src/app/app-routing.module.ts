@@ -6,10 +6,13 @@ import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
 import { CarComponent } from './components/car/car.component';
 import { PayComponent } from './components/pay/pay.component';
+import { OrderListComponent } from './components/order-list/order-list.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'order', component: OrderComponent },
+  { path: 'order', pathMatch: 'full', component: OrderListComponent },
+  { path: 'new-order', component: OrderComponent },
+  { path: 'new-car', component: OrderComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'car', component: CarComponent },
   { path: 'pay', component: PayComponent },

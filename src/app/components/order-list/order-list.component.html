@@ -1,36 +1,33 @@
 <div style="background-color:white;">
-  <div>
-    <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
-      <div nz-row alert-body>
-        <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
-          <span>单号:</span>
-          <span>{{order.id}}</span>
-        </div>
-        <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
-          <span>数量:</span>
-          <span>{{values.length}}</span>
-        </div>
-      </div>
-    </nz-alert>
-  </div>
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
-    <div nz-col [nzSpan]="12">
-      <nz-input style="width:100%;" [(ngModel)]="order.seller">
+    <div nz-col [nzSpan]="4">
+      <nz-input style="width:100%;" [(ngModel)]="search.seller">
         <ng-template #addOnBefore>
           <span>姓名:</span>
         </ng-template>
       </nz-input>
     </div>
-    <div nz-col [nzSpan]="12">
-      <nz-input style="width:100%;" [(ngModel)]="order.phone">
+    <div nz-col [nzSpan]="4">
+      <nz-input style="width:100%;" [(ngModel)]="search.phone">
         <ng-template #addOnBefore>
           <span>手机号:</span>
         </ng-template>
       </nz-input>
     </div>
+    <div nz-col [nzSpan]="4">
+      <nz-select style="width: 100%;" nzAllowClear [nzPlaceHolder]="'选择单子状态'" [(ngModel)]="search.status" nzShowSearch>
+        <nz-option *ngFor="let option of statusOptions" [nzLabel]="option.label" [nzValue]="option.value" [nzDisabled]="option.disabled">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div nz-col [nzSpan]="4">
+      <button nz-button [nzType]="'primary'" (click)="load()">
+        <span>搜索</span>
+      </button>
+    </div>
   </div>
   <div style="padding-top:13px;">
-    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="list" [nzIsPagination]="false">
       <thead nz-thead>
         <tr>
           <th nz-th style="padding:5px;">
@@ -53,11 +50,6 @@
             <span>{{i+1}}</span>
           </td>
           <td nz-td style="padding:2px;">
-            <nz-input style="width:100%;" [(ngModel)]="item.value" (ngModelChange)="modelChange(item, i)" (nzBlur)="doUpload(item, i)">
-              <ng-template #addOnAfter>
-                <span>斤</span>
-              </ng-template>
-            </nz-input>
           </td>
           <td nz-td style="padding:2px;">
             <span>上传完成</span>
@@ -69,11 +61,9 @@
       </tbody>
     </nz-table>
   </div>
-  <div nz-row style="padding-top:13px;">
-    <div nz-col [nzSpan]="24">
-      <button nz-button [nzType]="'primary'" (click)="doCommit()">
-        <span>提交结算</span>
-      </button>
+  <div>
+    <div *ngIf="list && list.length > 0" style="margin-top:15px;margin-bottom:15px;padding-left:15px;">
+      <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [nzSize]="'small'" nzShowTotal (nzPageIndexChange)="load()"></nz-pagination>
     </div>
   </div>
 </div>

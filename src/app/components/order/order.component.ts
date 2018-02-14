@@ -4,6 +4,10 @@ import { Location } from '@angular/common'
 import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 import 'rxjs/add/operator/switchMap'
+import { OrderStatus, Order } from '../../model/egg.model';
+import { ApiRes } from '../../model/api.model';
+import { API_USER_ORDER_INSERT, API_USER_ORDER_UPDATE } from '../../api/egg.api';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'order',
@@ -12,28 +16,24 @@ import 'rxjs/add/operator/switchMap'
 })
 export class OrderComponent {
 
-  order: Order = {
-    id: 123456,
-    count: 34
-  }
-  values: KeyValueObject[] = [{}]
+  order: Order = {}
+  values: Order[] = [{}]
   @Input()
   get data() {
     return this.values
   }
-  set data(val: KeyValueObject[]) {
+  set data(val: Order[]) {
     if (!val) val = []
     if (val.length === 0) {
       val.push({})
     }
     this.values = val
   }
-  @Output()
-  dataChange = new EventEmitter<KeyValueObject[]>()
 
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private router: Router,
     private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
@@ -43,59 +43,43 @@ export class OrderComponent {
   isFinished() {
     return OrderStatus.FINISHED === this.order.status
   }
-  modelChange(item: KeyValueObject, index: number) {
-    if (item.enabled === undefined) {
-      item.enabled = true
-    }
+  modelChange(item: Order, index: number) {
     if (index === this.values.length - 1) {
       this.values.push({})
     }
-    this.dataChange.emit(this.data)
     console.log(this.data)
   }
   remove(index: number) {
     if (this.data.length > 1) {
       this.data.splice(index, 1)
-      this.dataChange.emit(this.data)
     }
   }
-  inputFocus(item: KeyValueObject, index: number) {
+  inputFocus(item: Order, index: number) {
     if (index === this.values.length - 1) {
       this.values.push({})
     }
   }
-  doUpload(item: KeyValueObject, index: number) {
+  doUpload(item: Order, index: number) {
     console.log('up:', item, index)
   }
   doCommit() {
-    console.log(this.order)
+    this.modal.confirm({
+      title: `确认提交`,
+      content: `编号: ${this.order.id}, 姓名: ${this.order.seller}, 手机: ${this.order.phone}`,
+      onOk: () => {
+        this.order.status = OrderStatus.COMMITED
+        this.http.post<ApiRes<Order>>(API_USER_ORDER_UPDATE, this.order).subscribe(res => {
+          this.message.success('提交成功')
+          this.router.navigate(['/order'])
+        })
+      }
+    })
   }
   ngOnInit(): void {
-    this.route.queryParamMap.switchMap((q: Params) => {
-      console.log(q)
-      return ''
+    this.http.post<ApiRes<Order>>(API_USER_ORDER_INSERT, {}).subscribe(res => {
+      this.order = res.data
     })
   }
   ngAfterViewInit(): void {
   }
-}
-
-export interface KeyValueObject {
-  key?: string
-  value?: string
-  enabled?: boolean
-}
-
-export interface Order {
-  id?: number
-  name?: string
-  phone?: string
-  count?: number
-  status?: string
-}
-
-export const OrderStatus = {
-  NEW: 'new',
-  COMMITED: 'commited',
-  FINISHED: 'finished',
 }

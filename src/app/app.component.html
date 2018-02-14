@@ -3,13 +3,13 @@
     <nz-header style="height:48px;padding:0px;">
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 48px;">
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
-          <a routerLink="/">首页</a>
+          <a routerLink="/home">首页</a>
         </li>
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
           <a routerLink="/order">户单</a>
         </li>
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
-          <a routerLink="/car">车次</a>
+          <a routerLink="/car">车单</a>
         </li>
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
           <a routerLink="/pay">结算</a>
@@ -18,8 +18,8 @@
           <button style="margin-left:16px;" nz-button [nzType]="'dashed'" nzSize="small" nzGhost (click)="newOrder()">
             <span>新建户单</span>
           </button>
-          <button nz-button [nzType]="'dashed'" nzSize="small" nzGhost (click)="newOrder()">
-            <span>新建车次</span>
+          <button nz-button [nzType]="'dashed'" nzSize="small" nzGhost (click)="newCar()">
+            <span>新建车单</span>
           </button>
         </li>
       </ul>
