@@ -3,11 +3,10 @@ import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 @Component({
-  selector: 'order',
-  templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  selector: 'car',
+  templateUrl: './car.component.html',
 })
-export class OrderComponent {
+export class CarComponent {
 
   order: Order = {
     id: 123456,
@@ -62,9 +61,6 @@ export class OrderComponent {
   doUpload(item: KeyValueObject, index: number) {
     console.log('up:', item, index)
   }
-  doCommit() {
-    console.log(this.order)
-  }
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
@@ -86,7 +82,6 @@ export interface Order {
 }
 
 export const OrderStatus = {
-  NEW: 'new',
-  COMMITED: 'commited',
-  FINISHED: 'finished',
+  EDITING: 'EDITING',
+  FINISHED: 'FINISHED',
 }

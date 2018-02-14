@@ -3,11 +3,10 @@ import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'home',
+  templateUrl: './home.component.html',
 })
-export class AppComponent {
+export class HomeComponent {
 
   constructor(
     private subject: NzModalSubject,
@@ -16,8 +15,8 @@ export class AppComponent {
     private modal: NzModalService,
   ) { }
 
-  newOrder() {
-    this.message.info('new order')
-
+  ngOnInit(): void {
+  }
+  ngAfterViewInit(): void {
   }
 }
