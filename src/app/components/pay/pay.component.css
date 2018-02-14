@@ -1,0 +1,12 @@
+i.click-icon {
+  cursor: pointer;
+}
+
+i.click-icon:hover {
+  transform: scale(1.2);
+}
+
+i.click-icon:active {
+  font-weight: bold;
+  cursor: pointer;
+}

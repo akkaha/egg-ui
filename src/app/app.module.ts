@@ -10,6 +10,7 @@ import { OrderComponent } from './components/order/order.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
 import { CarComponent } from './components/car/car.component';
+import { PayComponent } from './components/pay/pay.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { CarComponent } from './components/car/car.component';
     AdminComponent,
     HomeComponent,
     CarComponent,
+    PayComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,16 +1,12 @@
 import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params } from '@angular/router'
-import { Location } from '@angular/common'
 import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import 'rxjs/add/operator/switchMap'
 
 @Component({
-  selector: 'order',
-  templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  templateUrl: './pay.component.html',
+  styleUrls: ['./pay.component.css']
 })
-export class OrderComponent {
+export class PayComponent {
 
   order: Order = {
     id: 123456,
@@ -32,8 +28,6 @@ export class OrderComponent {
   dataChange = new EventEmitter<KeyValueObject[]>()
 
   constructor(
-    private route: ActivatedRoute,
-    private location: Location,
     private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
@@ -71,10 +65,6 @@ export class OrderComponent {
     console.log(this.order)
   }
   ngOnInit(): void {
-    this.route.queryParamMap.switchMap((q: Params) => {
-      console.log(q)
-      return ''
-    })
   }
   ngAfterViewInit(): void {
   }
