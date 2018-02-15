@@ -1,5 +1,7 @@
 # EggUi
 
+> A simple front end for [Egg🥚](https://github.com/akkaha/egg) 
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.8.
 
 ## Development server
