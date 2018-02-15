@@ -23,11 +23,10 @@ export class AppComponent {
   ) { }
 
   newOrder() {
-    this.router.navigate(['/new-order'])
+    this.router.navigate(['/new-user-order'])
   }
 
   newCar() {
-    this.message.info('new car')
-
+    this.router.navigate(['/new-car-order'])
   }
 }

@@ -1,4 +1,4 @@
-export interface Order {
+export interface UserOrder {
     id?: number
     seller?: string
     phone?: string
@@ -9,4 +9,5 @@ export const OrderStatus = {
     NEW: 'new',
     COMMITED: 'commited',
     FINISHED: 'finished',
+    DEPRECATED: 'deprecated',
 }

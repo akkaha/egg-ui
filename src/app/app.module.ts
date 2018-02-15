@@ -7,23 +7,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { OrderComponent } from './components/order/order.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
 import { CarComponent } from './components/car/car.component';
 import { PayComponent } from './components/pay/pay.component';
-import { OrderListComponent } from './components/order-list/order-list.component';
 import { ApiCodeInterceptor } from './api/api-code.interceptor';
+import { UserOrderComponent } from './components/user-order/user-order.component';
+import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OrderComponent,
+    UserOrderComponent,
     AdminComponent,
     HomeComponent,
     CarComponent,
     PayComponent,
-    OrderListComponent,
+    UserOrderComponent,
+    UserOrderListComponent,
   ],
   imports: [
     BrowserModule,

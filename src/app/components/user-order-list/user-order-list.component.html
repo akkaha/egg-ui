@@ -1,0 +1,94 @@
+<div style="background-color:white;">
+  <div nz-row [nzGutter]="3" style="padding-top:7px;">
+    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+      <nz-input style="width:100%;" [(ngModel)]="search.seller">
+        <ng-template #addOnBefore>
+          <span>姓名:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+      <nz-input style="width:100%;" [(ngModel)]="search.phone">
+        <ng-template #addOnBefore>
+          <span>手机号:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+      <nz-select style="width: 100%;" nzAllowClear [nzPlaceHolder]="'选择单子状态'" [(ngModel)]="search.status" nzShowSearch>
+        <nz-option *ngFor="let option of statusOptions" [nzLabel]="option.label" [nzValue]="option.value" [nzDisabled]="option.disabled">
+        </nz-option>
+      </nz-select>
+    </div>
+    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="4">
+      <button nz-button [nzType]="'primary'" (click)="doSearch()">
+        <span>搜索</span>
+      </button>
+    </div>
+  </div>
+  <div style="padding-top:13px;">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="list" [nzIsPagination]="false">
+      <thead nz-thead>
+        <tr>
+          <th nz-th style="white-space:nowrap;">
+            <span>单号</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
+            <span>姓名</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
+            <span>手机</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
+            <span>状态</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
+            <span>创建时间</span>
+          </th>
+          <th nz-th style="width:180px;white-space:nowrap;">
+            <span>操作</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
+          <td nz-td style="width:100px;">
+            <span>{{item.id}}</span>
+          </td>
+          <td nz-td>
+            <span>{{item.seller}}</span>
+          </td>
+          <td nz-td>
+            <span>{{item.phone}}</span>
+          </td>
+          <td nz-td>
+            <nz-tag [nzColor]="statusColor(item.status)">{{statusName(item.status)}}</nz-tag>
+          </td>
+          <td nz-td>
+            <span>{{item.createdAt}}</span>
+          </td>
+          <td nz-td style="padding-left:8px;">
+            <button *ngIf="canBeDeprecated(item)" [nzSize]="'small'" nz-button [nzType]="'danger'">
+              <i class="anticon anticon-delete"></i>
+              <span style="margin:0px;">废弃</span>
+            </button>
+            <button *ngIf="canEdit(item)" [nzSize]="'small'" nz-button [nzType]="'default'">
+              <i class="anticon anticon-edit"></i>
+              <span style="margin:0px;">编辑</span>
+            </button>
+            <button *ngIf="canView(item)" [nzSize]="'small'" nz-button [nzType]="'default'">
+              <i class="anticon anticon-eye-o"></i>
+              <span style="margin:0px;">查看</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div>
+    <div *ngIf="list && list.length > 0" style="margin-top:15px;margin-bottom:15px;padding-left:15px;">
+      <nz-pagination [(nzPageIndex)]="current" [nzTotal]="total" [(nzPageSize)]="size" [nzSize]="'small'" nzShowTotal nzShowSizeChanger
+        (nzPageIndexChange)="load()" (nzPageSizeChange)="load()"></nz-pagination>
+    </div>
+  </div>
+</div>

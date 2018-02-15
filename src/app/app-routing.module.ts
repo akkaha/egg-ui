@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router'
-import { OrderComponent } from './components/order/order.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
 import { CarComponent } from './components/car/car.component';
 import { PayComponent } from './components/pay/pay.component';
-import { OrderListComponent } from './components/order-list/order-list.component';
+import { UserOrderComponent } from './components/user-order/user-order.component';
+import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'order', pathMatch: 'full', component: OrderListComponent },
-  { path: 'new-order', component: OrderComponent },
-  { path: 'new-car', component: OrderComponent },
+  { path: 'user-order-list', component: UserOrderListComponent },
+  { path: 'new-user-order', component: UserOrderComponent },
+  { path: 'new-car-order', component: UserOrderComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'car', component: CarComponent },
   { path: 'pay', component: PayComponent },
