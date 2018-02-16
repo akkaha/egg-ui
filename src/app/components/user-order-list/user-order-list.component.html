@@ -68,17 +68,28 @@
             <span>{{item.createdAt}}</span>
           </td>
           <td nz-td style="padding-left:8px;">
-            <button *ngIf="canBeDeprecated(item)" [nzSize]="'small'" nz-button [nzType]="'danger'">
+            <button *ngIf="canBeDeprecated(item)" [nzSize]="'small'" nz-button [nzType]="'danger'" (click)="doDeprecate(item)">
               <i class="anticon anticon-delete"></i>
               <span style="margin:0px;">废弃</span>
             </button>
-            <button *ngIf="canEdit(item)" [nzSize]="'small'" nz-button [nzType]="'default'">
+            <button *ngIf="canEdit(item)" [nzSize]="'small'" nz-button [nzType]="'default'" (click)="doEdit(item)">
               <i class="anticon anticon-edit"></i>
               <span style="margin:0px;">编辑</span>
             </button>
-            <button *ngIf="canView(item)" [nzSize]="'small'" nz-button [nzType]="'default'">
+            <button *ngIf="canDeal(item)" [nzSize]="'small'" nz-button [nzType]="'primary'" (click)="doPay(item)">
+              <i class="anticon anticon-pay-circle-o"></i>
+              <span style="margin:0px;">结算</span>
+            </button>
+            <button *ngIf="canRestore(item)" [nzSize]="'small'" nz-button [nzType]="'primary'" (click)="doRestore(item)">
+              <i class="anticon anticon-rollback"></i>
+              <span style="margin:0px;">恢复</span>
+            </button>
+            <button *ngIf="canView(item)" [nzSize]="'small'" nz-button [nzType]="'default'" (click)="doView(item)">
               <i class="anticon anticon-eye-o"></i>
               <span style="margin:0px;">查看</span>
+            </button>
+            <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="doDelete(item)">
+              <i class="anticon anticon-delete"></i>
             </button>
           </td>
         </tr>

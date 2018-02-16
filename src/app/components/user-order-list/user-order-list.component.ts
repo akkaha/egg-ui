@@ -6,7 +6,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 import 'rxjs/add/operator/switchMap'
 import { UserOrder, OrderStatus } from '../../model/egg.model';
 import { ApiRes } from '../../model/api.model';
-import { API_USER_ORDER_QUERY } from '../../api/egg.api';
+import { API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE, API_USER_ORDER_DELETE } from '../../api/egg.api';
 
 @Component({
   selector: 'user-order-list',
@@ -23,7 +23,7 @@ export class UserOrderListComponent {
     { label: '新增', value: OrderStatus.NEW },
     { label: '待结算', value: OrderStatus.COMMITED },
     { label: '完成', value: OrderStatus.FINISHED },
-    { label: '废弃的', value: OrderStatus.DEPRECATED },
+    { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
   list: UserOrder[] = [{}]
 
@@ -84,6 +84,57 @@ export class UserOrderListComponent {
   }
   canView(item: UserOrder) {
     return item.status !== OrderStatus.NEW
+  }
+  canDeal(item: UserOrder) {
+    return item.status === OrderStatus.COMMITED
+  }
+  canRestore(item: UserOrder) {
+    return item.status === OrderStatus.DEPRECATED
+  }
+  doDeprecate(item: UserOrder) {
+    this.modal.confirm({
+      title: '废弃',
+      content: `确认废弃吗?`,
+      onOk: () => {
+        let order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+          this.message.success('更新成功')
+          this.load()
+        })
+      }
+    })
+  }
+  doEdit(item: UserOrder) {
+  }
+  doView(item: UserOrder) {
+  }
+  doPay(item: UserOrder) {
+  }
+  doRestore(item: UserOrder) {
+    this.modal.confirm({
+      title: '恢复',
+      content: `确认恢复吗?`,
+      onOk: () => {
+        let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
+        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+          this.message.success('更新成功')
+          this.load()
+        })
+      }
+    })
+  }
+  doDelete(item: UserOrder) {
+    this.modal.confirm({
+      title: '删除',
+      content: `确认删除吗,删除后所有关联数据将不可找回?`,
+      onOk: () => {
+        let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
+        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
+          this.message.success('操作成功')
+          this.load()
+        })
+      }
+    })
   }
   ngOnInit(): void {
     this.load()
