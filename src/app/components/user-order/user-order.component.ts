@@ -7,9 +7,9 @@ import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/distinctUntilChanged'
 import 'rxjs/add/operator/switchMap'
-import { OrderStatus, UserOrder } from '../../model/egg.model';
+import { OrderStatus, UserOrder, OrderItem, clearNewOrderItem, DbStatus } from '../../model/egg.model';
 import { ApiRes } from '../../model/api.model';
-import { API_USER_ORDER_INSERT, API_USER_ORDER_UPDATE } from '../../api/egg.api';
+import { API_USER_ORDER_INSERT, API_USER_ORDER_UPDATE, API_ORDER_ITEM_INSERT, API_ORDER_ITEM_UPDATE, API_ORDER_ITEM_DELETE } from '../../api/egg.api';
 import { Router } from '@angular/router'
 import { Subject } from 'rxjs/Subject';
 
@@ -22,18 +22,8 @@ export class UserOrderComponent {
 
   orderSubject = new Subject()
   order: UserOrder = {}
-  values: UserOrder[] = [{}]
-  @Input()
-  get data() {
-    return this.values
-  }
-  set data(val: UserOrder[]) {
-    if (!val) val = []
-    if (val.length === 0) {
-      val.push({})
-    }
-    this.values = val
-  }
+  values: OrderItem[] = []
+  count = 0
 
   constructor(
     private route: ActivatedRoute,
@@ -51,24 +41,101 @@ export class UserOrderComponent {
   orderChange() {
     this.orderSubject.next()
   }
-  modelChange(item: UserOrder, index: number) {
+  itemChange(item: OrderItem, index: number) {
     if (index === this.values.length - 1) {
-      this.values.push({})
+      this.doAddItem()
     }
-    console.log(this.data)
+    if (item.id) {
+      item.status = '待更新'
+    } else {
+      item.status = '待上传'
+    }
+    item.subject.next(item)
   }
-  remove(index: number) {
-    if (this.data.length > 1) {
-      this.data.splice(index, 1)
+  itemBlur(item: OrderItem, index: number) {
+    if (item.weight) {
+      this.itemChange(item, index)
     }
   }
-  inputFocus(item: UserOrder, index: number) {
-    if (index === this.values.length - 1) {
-      this.values.push({})
+  remove(item: UserOrder, index: number) {
+    if (item.id) {
+      this.modal.confirm({
+        title: '删除',
+        content: '确认删除?',
+        onOk: () => {
+          this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_DELETE, item).subscribe(res => {
+            this.values.splice(index, 1)
+            this.calcCount()
+          })
+        }
+      })
+    } else {
+      this.values.splice(index, 1)
     }
   }
-  doUpload(item: UserOrder, index: number) {
-    console.log('up:', item, index)
+  doUpload(item: OrderItem) {
+    let r = /^[1-9]\d{0,3}(\.\d{1}){0,1}$/
+    if (item.weight && r.test(item.weight.toString())) {
+      item.error = false
+      if (item.id) {
+        // update
+        this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_UPDATE, clearNewOrderItem(item)).subscribe(res => {
+          item.status = '上传完成'
+          item.id = res.data.id
+          this.calcCount()
+        })
+      } else {
+        // insert
+        if (!item.dbStatus) {
+          let user = this.order.id
+          if (user) {
+            item.user = user
+            item.dbStatus = DbStatus.CREATING
+            item.status = '数据创建中...'
+            this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_INSERT, clearNewOrderItem(item)).subscribe(res => {
+              item.status = '上传完成'
+              item.id = res.data.id
+              item.dbStatus = DbStatus.CREATED
+              this.calcCount()
+            })
+          }
+        }
+      }
+    } else {
+      item.status = '格式错误'
+      item.error = true
+    }
+  }
+  calcCount() {
+    let c = 0
+    for (let o of this.values) {
+      if (o.status === '上传完成') {
+        c += 1
+      }
+    }
+    this.count = c
+  }
+  isItemSaved(item: OrderItem) {
+    return item.status === '上传完成'
+  }
+  itemStyle(item: OrderItem) {
+    if (this.isItemSaved(item)) {
+      return {
+        'color': 'green'
+      }
+    } else {
+      return {
+        'color': 'red'
+      }
+    }
+  }
+  doAddItem() {
+    // one item to one suject to reduce conflict
+    let orderItemUploadSubject = new Subject<OrderItem>()
+    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+      this.doUpload(item)
+    })
+    this.values.push({ status: '待上传', subject: orderItemUploadSubject })
   }
   doCommit() {
     this.modal.confirm({
@@ -84,11 +151,11 @@ export class UserOrderComponent {
     })
   }
   ngOnInit(): void {
+    this.doAddItem()
     this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_INSERT, {}).subscribe(res => {
       this.order = res.data
       this.orderSubject.debounceTime(1000).subscribe(() => {
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, this.order).subscribe(res => {
-
         })
       })
     })
