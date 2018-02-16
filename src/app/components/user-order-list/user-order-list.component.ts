@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params } from '@angular/router'
+import { ActivatedRoute, Params, Router, NavigationExtras } from '@angular/router'
 import { Location } from '@angular/common'
 import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
@@ -29,6 +29,7 @@ export class UserOrderListComponent {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private subject: NzModalSubject,
     private http: HttpClient,
@@ -92,36 +93,41 @@ export class UserOrderListComponent {
     return item.status === OrderStatus.DEPRECATED
   }
   doDeprecate(item: UserOrder) {
-    this.modal.confirm({
-      title: '废弃',
-      content: `确认废弃吗?`,
-      onOk: () => {
-        let order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
-          this.message.success('更新成功')
-          this.load()
-        })
-      }
+    // this.modal.confirm({
+    //   title: '废弃',
+    //   content: `确认废弃吗?`,
+    //   onOk: () => {
+    let order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+      this.message.success('更新成功')
+      this.load()
     })
+    //   }
+    // })
   }
   doEdit(item: UserOrder) {
+    this.router.navigate([`/user-order/${item.id}`])
   }
   doView(item: UserOrder) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: { 'readonly': '' },
+    };
+    this.router.navigate([`/user-order/${item.id}`], navigationExtras)
   }
   doPay(item: UserOrder) {
   }
   doRestore(item: UserOrder) {
-    this.modal.confirm({
-      title: '恢复',
-      content: `确认恢复吗?`,
-      onOk: () => {
-        let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
-          this.message.success('更新成功')
-          this.load()
-        })
-      }
+    // this.modal.confirm({
+    //   title: '恢复',
+    //   content: `确认恢复吗?`,
+    //   onOk: () => {
+    let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
+    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+      this.message.success('更新成功')
+      this.load()
     })
+    //   }
+    // })
   }
   doDelete(item: UserOrder) {
     this.modal.confirm({

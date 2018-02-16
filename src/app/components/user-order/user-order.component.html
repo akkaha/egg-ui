@@ -3,33 +3,37 @@
     <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
       <div nz-row alert-body>
         <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
-          <span>单号:</span>
-          <span>{{order.id}}</span>
+          <span>单号: </span>
+          <span style="font-weight:bold;color:black;">{{order.id}}</span>
         </div>
         <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
-          <span>数量:</span>
-          <span>{{count}}</span>
+          <span>数量: </span>
+          <span style="font-weight:bold;color:black;">{{count}}</span>
+        </div>
+        <div *ngIf="order.createdAt" nz-col [nzMd]="4" [nzXs]="24" [nzSm]="24">
+          <span>创建时间: </span>
+          <span style="font-weight:bold;color:black;">{{order.createdAt}}</span>
         </div>
       </div>
     </nz-alert>
   </div>
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
     <div nz-col [nzSpan]="12">
-      <nz-input style="width:100%;" [(ngModel)]="order.seller" (ngModelChange)="orderChange()">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.seller" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>姓名:</span>
         </ng-template>
       </nz-input>
     </div>
     <div nz-col [nzSpan]="12">
-      <nz-input style="width:100%;" [(ngModel)]="order.phone" (ngModelChange)="orderChange()">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.phone" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>手机号:</span>
         </ng-template>
       </nz-input>
     </div>
     <div nz-col [nzSpan]="24" style="padding-top:3px;">
-      <nz-input style="width:100%;" [(ngModel)]="order.remark" (ngModelChange)="orderChange()">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.remark" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>备注:</span>
         </ng-template>
@@ -37,7 +41,8 @@
     </div>
   </div>
   <div style="padding-top:13px;">
-    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
+      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues">
       <thead nz-thead>
         <tr>
           <th nz-th style="padding:5px;">
@@ -49,7 +54,7 @@
           <th nz-th style="padding:5px;width:100px;">
             <span>状态</span>
           </th>
-          <th nz-th style="padding:5px;">
+          <th *ngIf="!readonly" nz-th style="padding:5px;width:48px;">
             <span>移除</span>
           </th>
         </tr>
@@ -57,14 +62,14 @@
       <tbody nz-tbody>
         <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
           <td nz-td style="padding:2px;width:50px;">
-            <span>{{i+1}}</span>
+            <span>{{itemIndex(i)+1}}</span>
           </td>
           <td nz-td style="padding:2px;">
             <div *ngIf="item.error" style="color:coral;">
               <i class="anticon anticon-info-circle-o"></i>
               <span>输入数字, -9999.0 ~ 9999.0</span>
             </div>
-            <nz-input [nzReadonly]="item.readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" (ngModelChange)="itemChange(item, i)"
+            <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" (ngModelChange)="itemChange(item, itemIndex(i))"
               (nzBlur)="itemBlur(item, i)">
               <ng-template #addOnAfter>
                 <span>斤</span>
@@ -74,20 +79,26 @@
           <td nz-td style="padding:2px;">
             <span [ngStyle]="itemStyle(item)">{{item.status}}</span>
           </td>
-          <td nz-td style="padding:2px 8px;">
-            <i class="anticon anticon-close click-icon" (click)="remove(item, i)"></i>
+          <td *ngIf="!readonly" nz-td style="padding:2px 8px;">
+            <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="remove(item, itemIndex(i))">
+              <i class="anticon anticon-delete"></i>
+            </button>
           </td>
         </tr>
       </tbody>
     </nz-table>
   </div>
-  <div nz-row style="padding-top:13px;">
+  <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
     <div nz-col [nzSpan]="24">
-      <button nz-button [nzType]="'primary'" (click)="doAddItem()">
+      <button *ngIf="!readonly" nz-button [nzType]="'primary'" (click)="doAddEmptyItem()">
         <span>新加一箱</span>
       </button>
-      <button nz-button [nzType]="'danger'" (click)="doCommit()">
+      <button *ngIf="!readonly" nz-button [nzType]="'danger'" (click)="doCommit()">
         <span>提交结算</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span>返回</span>
       </button>
     </div>
   </div>

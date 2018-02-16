@@ -5,6 +5,9 @@ export interface UserOrder {
     seller?: string
     phone?: string
     status?: string
+    remark?: string
+    createdAt?: string
+    updatedAt?: string
 }
 
 export const OrderStatus = {

@@ -4,6 +4,7 @@ export const API_USER_ORDER_QUERY = BASE_URL + '/user-order/query'
 export const API_USER_ORDER_INSERT = BASE_URL + '/user-order/insert'
 export const API_USER_ORDER_UPDATE = BASE_URL + '/user-order/update'
 export const API_USER_ORDER_DELETE = BASE_URL + '/user-order/delete'
+export const API_USER_ORDER_DETAIL = BASE_URL + '/user-order/detail'
 
 export const API_CAR_ORDER_QUERY = BASE_URL + '/car-order/query'
 export const API_CAR_ORDER_INSERT = BASE_URL + '/car-order/insert'

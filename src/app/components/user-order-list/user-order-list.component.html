@@ -69,7 +69,7 @@
           </td>
           <td nz-td style="padding-left:8px;">
             <button *ngIf="canBeDeprecated(item)" [nzSize]="'small'" nz-button [nzType]="'danger'" (click)="doDeprecate(item)">
-              <i class="anticon anticon-delete"></i>
+              <i class="anticon anticon-inbox"></i>
               <span style="margin:0px;">废弃</span>
             </button>
             <button *ngIf="canEdit(item)" [nzSize]="'small'" nz-button [nzType]="'default'" (click)="doEdit(item)">

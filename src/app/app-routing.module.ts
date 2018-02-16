@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'user-order-list', component: UserOrderListComponent },
   { path: 'new-user-order', component: UserOrderComponent },
+  { path: 'user-order/:id', component: UserOrderComponent },
   { path: 'new-car-order', component: UserOrderComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'car', component: CarComponent },
