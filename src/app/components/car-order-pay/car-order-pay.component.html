@@ -1,0 +1,109 @@
+<div style="background-color:white;">
+  <div>
+    <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
+      <div nz-row alert-body>
+        <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
+          <span>车单号: </span>
+          <span style="font-weight:bold;color:black;">{{order.id}}</span>
+        </div>
+        <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
+          <span>数量: </span>
+          <span style="font-weight:bold;color:black;">{{count}}</span>
+        </div>
+        <div *ngIf="order.createdAt" nz-col [nzMd]="4" [nzXs]="24" [nzSm]="24">
+          <span>创建时间: </span>
+          <span style="font-weight:bold;color:black;">{{order.createdAt}}</span>
+        </div>
+      </div>
+    </nz-alert>
+  </div>
+  <div nz-row [nzGutter]="3" style="padding-top:7px;">
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driver">
+        <ng-template #addOnBefore>
+          <span>姓名:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driverPhone">
+        <ng-template #addOnBefore>
+          <span>手机号:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.serial">
+        <ng-template #addOnBefore>
+          <span>车牌:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+    <div nz-col [nzSpan]="24" style="padding-top:3px;">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.remark">
+        <ng-template #addOnBefore>
+          <span>备注:</span>
+        </ng-template>
+      </nz-input>
+    </div>
+  </div>
+  <div style="padding-top:13px;">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
+      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues">
+      <thead nz-thead>
+        <tr>
+          <th nz-th style="padding:5px;">
+            <span>序号</span>
+          </th>
+          <th nz-th style="padding:5px;">
+            <span>重量</span>
+          </th>
+          <th nz-th style="padding:5px;width:48px;">
+            <span>车次</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
+          <td nz-td style="padding:2px;width:50px;">
+            <span>{{itemIndex(i)+1}}</span>
+          </td>
+          <td nz-td style="padding:2px;">
+            <div *ngIf="item.error" style="color:coral;">
+              <i class="anticon anticon-info-circle-o"></i>
+              <span>输入数字, -9999.0 ~ 9999.0</span>
+            </div>
+            <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight">
+              <ng-template #addOnAfter>
+                <span>斤</span>
+              </ng-template>
+            </nz-input>
+          </td>
+          <td nz-td>
+            <button *ngIf="!item.car" style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+              <i class="anticon anticon-car"></i>
+            </button>
+            <button *ngIf="item.car" style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+              <i class="anticon anticon-car"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
+    <div nz-col [nzSpan]="24">
+      <button nz-button [nzType]="'primary'" (click)="doFinish()">
+        <span>完成</span>
+      </button>
+      <button nz-button [nzType]="'default'" (click)="doPrint()">
+        <i class="anticon anticon-printer"></i>
+        <span style="margin:0px;">打印</span>
+      </button>
+      <button nz-button [nzType]="'dashed'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span style="margin:0px;">返回列表</span>
+      </button>
+    </div>
+  </div>
+</div>

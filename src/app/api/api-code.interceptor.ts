@@ -21,16 +21,16 @@ export class ApiCodeInterceptor implements HttpInterceptor {
         } else {
             return next.handle(req).map((event: HttpEvent<any>) => {
                 if (event instanceof HttpResponse && ~(event.status / 100) < 3) {
-                    let res = event as HttpResponse<ApiResObj>
+                    const res = event as HttpResponse<ApiResObj>
                     if (isDevMode()) {
                         console.log(req.url, res.body)
                     }
-                    let code = res.body.code || res.body.Code
+                    const code = res.body.code || res.body.Code
                     if (APICODE.NOT_LOGIN === code) {
                     } else if (APICODE.OK === code) {
                         return event
                     } else {
-                        let errMsg = res.body.msg || res.body.Msg
+                        const errMsg = res.body.msg || res.body.Msg
                         this.message.error(errMsg)
                     }
                 } else {

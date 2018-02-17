@@ -107,6 +107,7 @@ export class CarOrderListComponent {
     this.router.navigate([`/car-order/${item.id}`], navigationExtras)
   }
   doPay(item: CarOrder) {
+    this.router.navigate([`/car-order-pay/${item.id}`])
   }
   doRestore(item: CarOrder) {
     let order: CarOrder = { id: item.id, status: OrderStatus.NEW }

@@ -1,13 +1,12 @@
-import { HttpClient } from '@angular/common/http'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
 
 @Component({
-  selector: 'admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
 
 
   constructor(
@@ -18,7 +17,5 @@ export class AdminComponent {
   ) { }
 
   ngOnInit(): void {
-  }
-  ngAfterViewInit(): void {
   }
 }

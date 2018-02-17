@@ -113,6 +113,7 @@ export class UserOrderListComponent {
     this.router.navigate([`/user-order/${item.id}`], navigationExtras)
   }
   doPay(item: UserOrder) {
+    this.router.navigate([`/user-order-pay/${item.id}`])
   }
   doRestore(item: UserOrder) {
     // this.modal.confirm({

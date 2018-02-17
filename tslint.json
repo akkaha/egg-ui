@@ -90,8 +90,8 @@
     ],
     "radix": true,
     "semicolon": [
-      true,
-      "always"
+      false,
+      "never"
     ],
     "triple-equals": [
       true,

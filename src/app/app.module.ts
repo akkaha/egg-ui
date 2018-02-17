@@ -16,6 +16,8 @@ import { UserOrderListComponent } from './components/user-order-list/user-order-
 import { CarOrderComponent } from './components/car-order/car-order.component';
 import { CarOrderListComponent } from './components/car-order-list/car-order-list.component';
 import { CarSelectorComponent } from './components/car-selector/car-selector.component';
+import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component';
+import { CarOrderPayComponent } from './components/car-order-pay/car-order-pay.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { CarSelectorComponent } from './components/car-selector/car-selector.com
     CarOrderComponent,
     CarOrderListComponent,
     CarSelectorComponent,
+    UserOrderPayComponent,
+    CarOrderPayComponent,
   ],
   entryComponents: [
     CarSelectorComponent
