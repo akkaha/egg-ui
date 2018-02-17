@@ -58,9 +58,6 @@
           <th nz-th style="padding:5px;">
             <span>重量</span>
           </th>
-          <th nz-th style="padding:5px;width:48px;">
-            <span>车次</span>
-          </th>
         </tr>
       </thead>
       <tbody nz-tbody>
@@ -78,14 +75,6 @@
                 <span>斤</span>
               </ng-template>
             </nz-input>
-          </td>
-          <td nz-td>
-            <button *ngIf="!item.car" style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
-              <i class="anticon anticon-car"></i>
-            </button>
-            <button *ngIf="item.car" style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
-              <i class="anticon anticon-car"></i>
-            </button>
           </td>
         </tr>
       </tbody>
