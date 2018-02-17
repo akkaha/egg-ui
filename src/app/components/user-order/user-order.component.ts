@@ -243,8 +243,8 @@ export class UserOrderComponent {
       for (let i = 0; i < feItems.length; ++i) {
         let feItem = feItems[i]
         let dbItem = items[i]
-        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString())) {
-          warnings.push(`前端: ${feItem.weight}, 数据库: ${dbItem ? dbItem.weight : 'null'}`)
+        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString() && feItem.car == dbItem.car)) {
+          warnings.push(`(序号 ${i + 1})=>前端: w-${feItem.weight},car-${feItem.car}, 数据库: w-${dbItem ? dbItem.weight : 'null'},car-${dbItem.car}`)
         }
       }
       this.modal.confirm({

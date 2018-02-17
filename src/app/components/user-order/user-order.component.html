@@ -104,16 +104,17 @@
               <ng-template #nzTemplate>
                 <div *ngIf="item.car">
                   <p>车次单号: {{item.car}}</p>
-                  <p>
+                  <p *ngIf="!readonly">
                     <a href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">更换</a>
                     <span>车次, </span>
-                    <a href="javascript:void(0);" (click)="itemDeleteCar(item, itemIndex(i))">删除</a>
+                    <a href="javascript:void(0);" (click)="itemDeleteCar(item, itemIndex(i))">移除</a>
                   </p>
                 </div>
                 <div *ngIf="!item.car">
                   <p>
-                    <span>不属于任何车次,</span>
-                    <a href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">选择一个</a>
+                    <span>不属于任何车次</span>
+                    <span *ngIf="!readonly">,</span>
+                    <a *ngIf="!readonly" href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">选择一个</a>
                   </p>
                 </div>
               </ng-template>
