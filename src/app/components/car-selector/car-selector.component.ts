@@ -1,24 +1,25 @@
-import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params, Router, NavigationExtras } from '@angular/router'
-import { Location } from '@angular/common'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import 'rxjs/add/operator/switchMap'
-import { CarOrder, OrderStatus } from '../../model/egg.model';
+import 'rxjs/add/operator/switchMap';
+
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+
+import { API_CAR_ORDER_QUERY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE, API_CAR_ORDER_DELETE } from '../../api/egg.api';
+import { CarOrder, OrderStatus } from '../../model/egg.model';
 
 @Component({
-  selector: 'car-selector',
   templateUrl: './car-selector.component.html',
   styleUrls: ['./car-selector.component.css']
 })
-export class CarSelectorComponent {
+export class CarSelectorComponent implements OnInit {
 
   search: CarOrder = {}
-  total: number = 0
-  current: number = 1
-  size: number = 10
+  total = 0
+  current = 1
+  size = 10
   statusOptions = [
     { label: '新增', value: OrderStatus.NEW },
     { label: '待结算', value: OrderStatus.COMMITED },
@@ -101,7 +102,5 @@ export class CarSelectorComponent {
   }
   ngOnInit(): void {
     this.load()
-  }
-  ngAfterViewInit(): void {
   }
 }

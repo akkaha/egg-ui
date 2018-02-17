@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
 
 @Component({
-  selector: 'home',
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
@@ -15,8 +14,4 @@ export class HomeComponent {
     private modal: NzModalService,
   ) { }
 
-  ngOnInit(): void {
-  }
-  ngAfterViewInit(): void {
-  }
 }

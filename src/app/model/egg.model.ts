@@ -1,4 +1,4 @@
-import { Subject } from "rxjs/Subject";
+import { Subject } from 'rxjs/Subject';
 
 export interface UserOrder {
     id?: number
@@ -50,7 +50,7 @@ export const DbStatus = {
 }
 
 export function clearNewOrderItem(item: OrderItem) {
-    let newItem: OrderItem = { ...item }
+    const newItem: OrderItem = { ...item }
     newItem.dbStatus = undefined
     newItem.readonly = undefined
     newItem.status = undefined
@@ -62,7 +62,7 @@ export function clearNewOrderItem(item: OrderItem) {
 }
 
 export function clearOrderField(item: UserOrder | CarOrder) {
-    let newItem: UserOrder | CarOrder = { ...item }
+    const newItem: UserOrder | CarOrder = { ...item }
     newItem.createdAt = undefined
     newItem.updatedAt = undefined
     return newItem

@@ -1,25 +1,40 @@
-import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params } from '@angular/router'
-import { Location } from '@angular/common'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import 'rxjs/add/operator/switchMap'
-import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/distinctUntilChanged'
-import 'rxjs/add/operator/switchMap'
-import { OrderStatus, UserOrder, OrderItem, clearNewOrderItem, DbStatus, CarOrder, clearOrderField } from '../../model/egg.model';
-import { ApiRes } from '../../model/api.model';
-import { API_USER_ORDER_INSERT, API_USER_ORDER_UPDATE, API_ORDER_ITEM_INSERT, API_ORDER_ITEM_UPDATE, API_ORDER_ITEM_DELETE, API_USER_ORDER_DETAIL } from '../../api/egg.api';
-import { Router } from '@angular/router'
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/switchMap';
+
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
 import { Subject } from 'rxjs/Subject';
+
+import {
+  API_ORDER_ITEM_DELETE,
+  API_ORDER_ITEM_INSERT,
+  API_ORDER_ITEM_UPDATE,
+  API_USER_ORDER_DETAIL,
+  API_USER_ORDER_INSERT,
+  API_USER_ORDER_UPDATE,
+} from '../../api/egg.api';
+import { ApiRes } from '../../model/api.model';
+import {
+  CarOrder,
+  clearNewOrderItem,
+  clearOrderField,
+  DbStatus,
+  OrderItem,
+  OrderStatus,
+  UserOrder,
+} from '../../model/egg.model';
 import { CarSelectorComponent } from '../car-selector/car-selector.component';
 
 @Component({
-  selector: 'user-order',
   templateUrl: './user-order.component.html',
   styleUrls: ['./user-order.component.css']
 })
-export class UserOrderComponent {
+export class UserOrderComponent implements OnInit {
 
   orderSubject = new Subject()
   order: UserOrder = {}
@@ -84,7 +99,7 @@ export class UserOrderComponent {
       componentParams: {
         data: carOrder,
         onSelect: (selectedCar: CarOrder) => {
-          let isNewCar = item.car !== selectedCar.id
+          const isNewCar = item.car !== selectedCar.id
           item.car = selectedCar.id
           if (item.id && isNewCar) {
             item.status = '待更新'
@@ -156,7 +171,7 @@ export class UserOrderComponent {
     }
   }
   doUpload(item: OrderItem) {
-    let r = /^[1-9]\d{0,3}(\.\d{1}){0,1}$/
+    const r = /^[1-9]\d{0,3}(\.\d{1}){0,1}$/
     if (item.weight && r.test(item.weight.toString())) {
       item.error = false
       if (item.id) {
@@ -170,7 +185,7 @@ export class UserOrderComponent {
       } else {
         // insert
         if (!item.dbStatus) {
-          let user = this.order.id
+          const user = this.order.id
           if (user) {
             item.user = user
             item.dbStatus = DbStatus.CREATING
@@ -195,7 +210,7 @@ export class UserOrderComponent {
   }
   calcCount() {
     let c = 0
-    for (let o of this.values) {
+    for (const o of this.values) {
       if (o.status === '上传完成') {
         c += 1
       }
@@ -218,7 +233,7 @@ export class UserOrderComponent {
   }
   doAddEmptyItem() {
     // one item to one suject to reduce conflict
-    let orderItemUploadSubject = new Subject<OrderItem>()
+    const orderItemUploadSubject = new Subject<OrderItem>()
     orderItemUploadSubject.debounceTime(500).subscribe(item => {
       this.doUpload(item)
     })
@@ -227,23 +242,24 @@ export class UserOrderComponent {
   }
   doCommit() {
     this.http.get<ApiRes<{ order: UserOrder, items: OrderItem[] }>>(`${API_USER_ORDER_DETAIL}/${this.order.id}`).subscribe(res => {
-      let order = res.data.order
-      let items = res.data.items
-      let feItems = this.values.filter(item => {
+      const order = res.data.order
+      const items = res.data.items
+      const feItems = this.values.filter(item => {
         if (item.id) {
           return true
         } else {
           return false
         }
       })
-      let warnings = []
+      const warnings = []
       if (feItems.length !== items.length) {
         warnings.push('数量不一致')
       }
       for (let i = 0; i < feItems.length; ++i) {
-        let feItem = feItems[i]
-        let dbItem = items[i]
-        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString() && feItem.car == dbItem.car)) {
+        const feItem = feItems[i]
+        const dbItem = items[i]
+        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString() && feItem.car === dbItem.car)) {
+          // tslint:disable-next-line:max-line-length
           warnings.push(`(序号 ${i + 1})=>前端: w-${feItem.weight},car-${feItem.car}, 数据库: w-${dbItem ? dbItem.weight : 'null'},car-${dbItem.car}`)
         }
       }
@@ -252,7 +268,7 @@ export class UserOrderComponent {
         content: `编号: ${order.id}, 姓名: ${order.seller}, 手机: ${order.phone}, 数量: ${items.length}. ${warnings.join(',')}`,
         onOk: () => {
           this.order.status = OrderStatus.COMMITED
-          this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
+          this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => {
             this.message.success('提交成功')
             this.router.navigate(['/user-order-list'])
           })
@@ -270,7 +286,7 @@ export class UserOrderComponent {
       }
     })
     this.route.params.subscribe(params => {
-      let id = params['id']
+      const id = params['id']
       if (id) {
         // edit or view
         this.http.get<ApiRes<{ order: UserOrder, items: OrderItem[], car: CarOrder }>>(`${API_USER_ORDER_DETAIL}/${id}`).subscribe(res => {
@@ -279,13 +295,13 @@ export class UserOrderComponent {
           }
           this.order = res.data.order
           this.orderSubject.debounceTime(1000).subscribe(() => {
-            this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => { })
+            this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => { })
           })
           this.count = res.data.items.length
-          for (let item of res.data.items) {
-            let orderItemUploadSubject = new Subject<OrderItem>()
-            orderItemUploadSubject.debounceTime(500).subscribe(item => {
-              this.doUpload(item)
+          for (const item of res.data.items) {
+            const orderItemUploadSubject = new Subject<OrderItem>()
+            orderItemUploadSubject.debounceTime(500).subscribe(uploadItem => {
+              this.doUpload(uploadItem)
             })
             this.weightCache[item.id] = item.weight.toString()
             item.status = '上传完成'
@@ -303,12 +319,10 @@ export class UserOrderComponent {
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_INSERT, {}).subscribe(res => {
           this.order = res.data
           this.orderSubject.debounceTime(800).subscribe(() => {
-            this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, this.order).subscribe(res => { })
+            this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, this.order).subscribe(updateRes => { })
           })
         })
       }
     })
-  }
-  ngAfterViewInit(): void {
   }
 }

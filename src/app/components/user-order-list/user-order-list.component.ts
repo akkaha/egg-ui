@@ -1,24 +1,25 @@
-import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params, Router, NavigationExtras } from '@angular/router'
-import { Location } from '@angular/common'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import 'rxjs/add/operator/switchMap'
-import { UserOrder, OrderStatus } from '../../model/egg.model';
+import 'rxjs/add/operator/switchMap';
+
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+
+import { API_USER_ORDER_DELETE, API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE, API_USER_ORDER_DELETE } from '../../api/egg.api';
+import { OrderStatus, UserOrder } from '../../model/egg.model';
 
 @Component({
-  selector: 'user-order-list',
   templateUrl: './user-order-list.component.html',
   styleUrls: ['./user-order-list.component.css']
 })
-export class UserOrderListComponent {
+export class UserOrderListComponent implements OnInit {
 
   search: UserOrder = {}
-  total: number = 0
-  current: number = 1
-  size: number = 10
+  total = 0
+  current = 1
+  size = 10
   statusOptions = [
     { label: '新增', value: OrderStatus.NEW },
     { label: '待结算', value: OrderStatus.COMMITED },
@@ -95,7 +96,7 @@ export class UserOrderListComponent {
     //   title: '废弃',
     //   content: `确认废弃吗?`,
     //   onOk: () => {
-    let order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+    const order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
     this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
@@ -107,7 +108,7 @@ export class UserOrderListComponent {
     this.router.navigate([`/user-order/${item.id}`])
   }
   doView(item: UserOrder) {
-    let navigationExtras: NavigationExtras = {
+    const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     };
     this.router.navigate([`/user-order/${item.id}`], navigationExtras)
@@ -120,7 +121,7 @@ export class UserOrderListComponent {
     //   title: '恢复',
     //   content: `确认恢复吗?`,
     //   onOk: () => {
-    let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
+    const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
     this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
@@ -133,7 +134,7 @@ export class UserOrderListComponent {
       title: '删除',
       content: `确认删除吗,删除后所有关联数据将不可找回?`,
       onOk: () => {
-        let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
+        const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
           this.load()
@@ -143,7 +144,5 @@ export class UserOrderListComponent {
   }
   ngOnInit(): void {
     this.load()
-  }
-  ngAfterViewInit(): void {
   }
 }

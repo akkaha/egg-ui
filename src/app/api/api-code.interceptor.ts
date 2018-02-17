@@ -20,6 +20,7 @@ export class ApiCodeInterceptor implements HttpInterceptor {
             return next.handle(req)
         } else {
             return next.handle(req).map((event: HttpEvent<any>) => {
+                // tslint:disable-next-line:no-bitwise
                 if (event instanceof HttpResponse && ~(event.status / 100) < 3) {
                     const res = event as HttpResponse<ApiResObj>
                     if (isDevMode()) {

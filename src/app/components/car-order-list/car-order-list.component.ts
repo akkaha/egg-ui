@@ -1,24 +1,25 @@
-import { HttpClient } from '@angular/common/http'
-import { ActivatedRoute, Params, Router, NavigationExtras } from '@angular/router'
-import { Location } from '@angular/common'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import 'rxjs/add/operator/switchMap'
-import { CarOrder, OrderStatus } from '../../model/egg.model';
+import 'rxjs/add/operator/switchMap';
+
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+
+import { API_CAR_ORDER_DELETE, API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE, API_CAR_ORDER_DELETE } from '../../api/egg.api';
+import { CarOrder, OrderStatus } from '../../model/egg.model';
 
 @Component({
-  selector: 'car-order-list',
   templateUrl: './car-order-list.component.html',
   styleUrls: ['./car-order-list.component.css']
 })
-export class CarOrderListComponent {
+export class CarOrderListComponent implements OnInit {
 
   search: CarOrder = {}
-  total: number = 0
-  current: number = 1
-  size: number = 10
+  total = 0
+  current = 1
+  size = 10
   statusOptions = [
     { label: '新增', value: OrderStatus.NEW },
     { label: '待结算', value: OrderStatus.COMMITED },
@@ -91,7 +92,7 @@ export class CarOrderListComponent {
     return item.status === OrderStatus.DEPRECATED
   }
   doDeprecate(item: CarOrder) {
-    let order: CarOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+    const order: CarOrder = { id: item.id, status: OrderStatus.DEPRECATED }
     this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
@@ -101,7 +102,7 @@ export class CarOrderListComponent {
     this.router.navigate([`/car-order/${item.id}`])
   }
   doView(item: CarOrder) {
-    let navigationExtras: NavigationExtras = {
+    const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     };
     this.router.navigate([`/car-order/${item.id}`], navigationExtras)
@@ -110,7 +111,7 @@ export class CarOrderListComponent {
     this.router.navigate([`/car-order-pay/${item.id}`])
   }
   doRestore(item: CarOrder) {
-    let order: CarOrder = { id: item.id, status: OrderStatus.NEW }
+    const order: CarOrder = { id: item.id, status: OrderStatus.NEW }
     this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
@@ -121,7 +122,7 @@ export class CarOrderListComponent {
       title: '删除',
       content: `确认删除吗,删除后所有关联数据将不可找回?`,
       onOk: () => {
-        let order: CarOrder = { id: item.id, status: OrderStatus.NEW }
+        const order: CarOrder = { id: item.id, status: OrderStatus.NEW }
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
           this.load()
@@ -131,7 +132,5 @@ export class CarOrderListComponent {
   }
   ngOnInit(): void {
     this.load()
-  }
-  ngAfterViewInit(): void {
   }
 }
