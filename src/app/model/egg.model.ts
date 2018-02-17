@@ -4,6 +4,18 @@ export interface UserOrder {
     id?: number
     seller?: string
     phone?: string
+    car?: number
+    status?: string
+    remark?: string
+    createdAt?: string
+    updatedAt?: string
+}
+
+export interface CarOrder {
+    id?: number
+    serial?: string
+    driver?: string
+    driverPhone?: string
     status?: string
     remark?: string
     createdAt?: string
@@ -22,6 +34,8 @@ export interface OrderItem {
     weight?: number
     user?: number
     car?: number
+    createdAt?: string
+    updatedAt?: string
     /** use internal */
     dbStatus?: string
     readonly?: boolean
@@ -42,5 +56,14 @@ export function clearNewOrderItem(item: OrderItem) {
     newItem.status = undefined
     newItem.error = undefined
     newItem.subject = undefined
+    newItem.createdAt = undefined
+    newItem.updatedAt = undefined
+    return newItem
+}
+
+export function clearOrderField(item: UserOrder | CarOrder) {
+    let newItem: UserOrder | CarOrder = { ...item }
+    newItem.createdAt = undefined
+    newItem.updatedAt = undefined
     return newItem
 }

@@ -4,18 +4,18 @@ import { Location } from '@angular/common'
 import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 import 'rxjs/add/operator/switchMap'
-import { UserOrder, OrderStatus } from '../../model/egg.model';
+import { CarOrder, OrderStatus } from '../../model/egg.model';
 import { ApiRes } from '../../model/api.model';
-import { API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE, API_USER_ORDER_DELETE } from '../../api/egg.api';
+import { API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE, API_CAR_ORDER_DELETE } from '../../api/egg.api';
 
 @Component({
-  selector: 'user-order-list',
-  templateUrl: './user-order-list.component.html',
-  styleUrls: ['./user-order-list.component.css']
+  selector: 'car-order-list',
+  templateUrl: './car-order-list.component.html',
+  styleUrls: ['./car-order-list.component.css']
 })
-export class UserOrderListComponent {
+export class CarOrderListComponent {
 
-  search: UserOrder = {}
+  search: CarOrder = {}
   total: number = 0
   current: number = 1
   size: number = 10
@@ -25,7 +25,7 @@ export class UserOrderListComponent {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: UserOrder[] = [{}]
+  list: CarOrder[] = [{}]
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class UserOrderListComponent {
     this.load()
   }
   load() {
-    this.http.post<ApiRes<UserOrder[]>>(API_USER_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
+    this.http.post<ApiRes<CarOrder[]>>(API_CAR_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
       this.list = res.data.records
       this.total = res.data.total
     })
@@ -75,65 +75,53 @@ export class UserOrderListComponent {
         return '未知'
     }
   }
-  canBeDeprecated(item: UserOrder) {
+  canBeDeprecated(item: CarOrder) {
     return item.status === OrderStatus.NEW
   }
-  canEdit(item: UserOrder) {
+  canEdit(item: CarOrder) {
     return item.status === OrderStatus.NEW
   }
-  canView(item: UserOrder) {
+  canView(item: CarOrder) {
     return item.status !== OrderStatus.NEW
   }
-  canDeal(item: UserOrder) {
+  canDeal(item: CarOrder) {
     return item.status === OrderStatus.COMMITED
   }
-  canRestore(item: UserOrder) {
+  canRestore(item: CarOrder) {
     return item.status === OrderStatus.DEPRECATED
   }
-  doDeprecate(item: UserOrder) {
-    // this.modal.confirm({
-    //   title: '废弃',
-    //   content: `确认废弃吗?`,
-    //   onOk: () => {
-    let order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
-    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+  doDeprecate(item: CarOrder) {
+    let order: CarOrder = { id: item.id, status: OrderStatus.DEPRECATED }
+    this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
-    //   }
-    // })
   }
-  doEdit(item: UserOrder) {
-    this.router.navigate([`/user-order/${item.id}`])
+  doEdit(item: CarOrder) {
+    this.router.navigate([`/car-order/${item.id}`])
   }
-  doView(item: UserOrder) {
+  doView(item: CarOrder) {
     let navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     };
-    this.router.navigate([`/user-order/${item.id}`], navigationExtras)
+    this.router.navigate([`/car-order/${item.id}`], navigationExtras)
   }
-  doPay(item: UserOrder) {
+  doPay(item: CarOrder) {
   }
-  doRestore(item: UserOrder) {
-    // this.modal.confirm({
-    //   title: '恢复',
-    //   content: `确认恢复吗?`,
-    //   onOk: () => {
-    let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
-    this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
+  doRestore(item: CarOrder) {
+    let order: CarOrder = { id: item.id, status: OrderStatus.NEW }
+    this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
-    //   }
-    // })
   }
-  doDelete(item: UserOrder) {
+  doDelete(item: CarOrder) {
     this.modal.confirm({
       title: '删除',
       content: `确认删除吗,删除后所有关联数据将不可找回?`,
       onOk: () => {
-        let order: UserOrder = { id: item.id, status: OrderStatus.NEW }
-        this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
+        let order: CarOrder = { id: item.id, status: OrderStatus.NEW }
+        this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
           this.load()
         })

@@ -18,30 +18,24 @@
     </nz-alert>
   </div>
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
-    <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.seller" (ngModelChange)="orderChange()">
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driver" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>姓名:</span>
         </ng-template>
       </nz-input>
     </div>
-    <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.phone" (ngModelChange)="orderChange()">
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driverPhone" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>手机号:</span>
         </ng-template>
       </nz-input>
     </div>
-    <div nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
-      <nz-input style="width:100%;" [nzReadonly]="true" [ngModel]="descCar(defaultCar)" [nzPlaceHolder]="'选择默认车次'">
+    <div nz-col [nzSpan]="8">
+      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.serial" (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
-          <span (click)="$event.stopPropagation()">车次:</span>
-        </ng-template>
-        <ng-template *ngIf="!readonly" #addOnAfter>
-          <div class="car-select" (click)="selectCar()">
-            <i class="anticon anticon-select"></i>
-            <span>更换</span>
-          </div>
+          <span>车牌:</span>
         </ng-template>
       </nz-input>
     </div>
@@ -93,31 +87,12 @@
             </nz-input>
           </td>
           <td nz-td>
-            <nz-popover [(nzVisible)]="popVisible[itemIndex(i)]" [nzTrigger]="'click'" [nzTitle]="'选择车次'">
-              <button *ngIf="!item.car" nz-popover style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
-                <i class="anticon anticon-car"></i>
-              </button>
-              <button *ngIf="item.car" nz-popover style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'"
-                [nzShape]="'circle'">
-                <i class="anticon anticon-car"></i>
-              </button>
-              <ng-template #nzTemplate>
-                <div *ngIf="item.car">
-                  <p>车次单号: {{item.car}}</p>
-                  <p>
-                    <a href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">更换</a>
-                    <span>车次, </span>
-                    <a href="javascript:void(0);" (click)="itemDeleteCar(item, itemIndex(i))">删除</a>
-                  </p>
-                </div>
-                <div *ngIf="!item.car">
-                  <p>
-                    <span>不属于任何车次,</span>
-                    <a href="javascript:void(0);" (click)="itemSelectCar(item, itemIndex(i))">选择一个</a>
-                  </p>
-                </div>
-              </ng-template>
-            </nz-popover>
+            <button *ngIf="!item.car" style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+              <i class="anticon anticon-car"></i>
+            </button>
+            <button *ngIf="item.car" style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+              <i class="anticon anticon-car"></i>
+            </button>
           </td>
           <td nz-td style="padding:2px;">
             <span [ngStyle]="itemStyle(item)">{{item.status}}</span>

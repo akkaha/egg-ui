@@ -9,11 +9,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
-import { CarComponent } from './components/car/car.component';
 import { PayComponent } from './components/pay/pay.component';
 import { ApiCodeInterceptor } from './api/api-code.interceptor';
 import { UserOrderComponent } from './components/user-order/user-order.component';
 import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
+import { CarOrderComponent } from './components/car-order/car-order.component';
+import { CarOrderListComponent } from './components/car-order-list/car-order-list.component';
+import { CarSelectorComponent } from './components/car-selector/car-selector.component';
 
 @NgModule({
   declarations: [
@@ -21,10 +23,15 @@ import { UserOrderListComponent } from './components/user-order-list/user-order-
     UserOrderComponent,
     AdminComponent,
     HomeComponent,
-    CarComponent,
     PayComponent,
     UserOrderComponent,
     UserOrderListComponent,
+    CarOrderComponent,
+    CarOrderListComponent,
+    CarSelectorComponent,
+  ],
+  entryComponents: [
+    CarSelectorComponent
   ],
   imports: [
     BrowserModule,
