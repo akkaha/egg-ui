@@ -26,7 +26,7 @@ export class UserOrderListComponent implements OnInit {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: UserOrder[] = [{}]
+  list: UserOrder[] = []
 
   constructor(
     private route: ActivatedRoute,

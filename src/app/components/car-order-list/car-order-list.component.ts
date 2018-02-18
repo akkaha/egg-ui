@@ -26,7 +26,7 @@ export class CarOrderListComponent implements OnInit {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: CarOrder[] = [{}]
+  list: CarOrder[] = []
 
   constructor(
     private route: ActivatedRoute,
