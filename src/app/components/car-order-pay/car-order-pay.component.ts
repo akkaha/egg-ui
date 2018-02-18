@@ -8,18 +8,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
-import { Subject } from 'rxjs/Subject';
 
-import {
-  API_CAR_ORDER_DETAIL,
-  API_CAR_ORDER_INSERT,
-  API_CAR_ORDER_UPDATE,
-  API_ORDER_ITEM_DELETE,
-  API_ORDER_ITEM_INSERT,
-  API_ORDER_ITEM_UPDATE,
-} from '../../api/egg.api';
+import { API_CAR_ORDER_PAY, API_CAR_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearNewOrderItem, clearOrderField, DbStatus, OrderItem, OrderStatus } from '../../model/egg.model';
+import { CarOrder, clearOrderField, OrderBill, OrderStatus } from '../../model/egg.model';
 
 @Component({
   templateUrl: './car-order-pay.component.html',
@@ -27,8 +19,10 @@ import { CarOrder, clearNewOrderItem, clearOrderField, DbStatus, OrderItem, Orde
 export class CarOrderPayComponent implements OnInit {
 
   order: CarOrder = {}
-  values: OrderItem[] = []
-  count = 0
+  bill: OrderBill = {
+    items: [],
+    priceRange: {}
+  }
   readonly = true
   tablePageIndex = 1
   tablePageSize = 10
@@ -53,7 +47,7 @@ export class CarOrderPayComponent implements OnInit {
   doFinish() {
     this.modal.confirm({
       title: `确认完成`,
-      content: `编号: ${this.order.id}, 姓名: ${this.order.driver}, 手机: ${this.order.driverPhone}, 数量: ${this.values.length}.`,
+      content: `编号: ${this.order.id}, 姓名: ${this.order.driver}, 手机: ${this.order.driverPhone}, 数量: ${this.bill.totalCount}.`,
       onOk: () => {
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
           this.message.success('提交成功')
@@ -62,8 +56,26 @@ export class CarOrderPayComponent implements OnInit {
       }
     })
   }
+  doNew() {
+    this.modal.confirm({
+      title: `确认打回单号: ${this.order.id}`,
+      content: `打回后状态变为 '新增', 需要重新提交.`,
+      onOk: () => {
+        this.order.status = OrderStatus.NEW
+        this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
+          this.message.success('操作成功')
+          this.goBack()
+        })
+      }
+    })
+  }
   doPrint() {
 
+  }
+  doCalc(date: string) {
+    this.http.get<ApiRes<OrderPayRes>>(`${API_CAR_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
+      this.bill = res.data.bill
+    })
   }
   goBack() {
     this.router.navigate(['/car-order-list'])
@@ -72,12 +84,16 @@ export class CarOrderPayComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id']
       if (id) {
-        this.http.get<ApiRes<{ order: CarOrder, items: OrderItem[] }>>(`${API_CAR_ORDER_DETAIL}/${id}`).subscribe(res => {
+        this.http.get<ApiRes<OrderPayRes>>(`${API_CAR_ORDER_PAY}/${id}`).subscribe(res => {
           this.order = res.data.order
-          this.count = res.data.items.length
-          this.values = res.data.items
+          this.bill = res.data.bill
         })
       }
     })
   }
+}
+
+interface OrderPayRes {
+  order: CarOrder
+  bill: OrderBill
 }

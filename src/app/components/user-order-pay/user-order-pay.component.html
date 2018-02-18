@@ -1,18 +1,38 @@
 <div style="background-color:white;">
   <div>
     <nz-alert [nzType]="isFinished() ? 'success' : 'warning'" nzShowIcon>
-      <div nz-row alert-body>
-        <div nz-col [nzMd]="8" [nzXs]="16" [nzSm]="16">
-          <span>户单号: </span>
-          <span style="font-weight:bold;color:black;">{{order.id}}</span>
+      <div alert-body>
+        <div nz-row>
+          <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
+            <span>户单号: </span>
+            <span style="font-weight:bold;color:black;">{{order.id}}</span>
+          </div>
+          <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
+            <span>数量: </span>
+            <span style="font-weight:bold;color:black;">{{bill.totalCount}}</span>
+          </div>
+          <div *ngIf="order.createdAt" nz-col [nzMd]="4" [nzXs]="24" [nzSm]="24">
+            <span>创建时间: </span>
+            <span style="font-weight:bold;color:black;">{{order.createdAt}}</span>
+          </div>
         </div>
-        <div nz-col [nzMd]="4" [nzXs]="8" [nzSm]="8">
-          <span>数量: </span>
-          <span style="font-weight:bold;color:black;">{{count}}</span>
-        </div>
-        <div *ngIf="order.createdAt" nz-col [nzMd]="4" [nzXs]="24" [nzSm]="24">
-          <span>创建时间: </span>
-          <span style="font-weight:bold;color:black;">{{order.createdAt}}</span>
+        <div nz-row>
+          <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
+            <span>总重量: </span>
+            <span style="font-weight:bold;color:black;">{{bill.totalWeight}}</span>
+          </div>
+          <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
+            <span>平均重量: </span>
+            <span style="font-weight:bold;color:black;">{{bill.meanWeight}}</span>
+          </div>
+          <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
+            <span>总价: </span>
+            <span style="font-weight:bold;color:black;">{{bill.totalPrice}}</span>
+          </div>
+          <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
+            <span>平均价格: </span>
+            <span style="font-weight:bold;color:black;">{{bill.meanPrice}}</span>
+          </div>
         </div>
       </div>
     </nz-alert>
@@ -53,13 +73,10 @@
       </nz-input>
     </div>
   </div>
-  <div style="padding-top:13px;">
-    <div nz-row [nzGutter]="3" style="display:flex;flex-wrap:wrap;">
-      <div nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
-        <app-pay-pattern></app-pay-pattern>
-      </div>
-      <div nz-col [nzMd]="16" [nzXs]="24" [nzSm]="24">
-        <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
+  <div style="padding-top:10px;">
+    <div nz-row [nzGutter]="3" style="display:flex;flex-wrap:wrap-reverse;">
+      <div style="padding-top:3px;" nz-col [nzMd]="16" [nzXs]="24" [nzSm]="24">
+        <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="bill.items" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
           nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues">
           <thead nz-thead>
             <tr>
@@ -69,6 +86,9 @@
               <th nz-th style="padding:5px;">
                 <span>重量</span>
               </th>
+              <th nz-th style="padding:5px;">
+                <span>价格</span>
+              </th>
               <th nz-th style="padding:5px;width:48px;">
                 <span>车次</span>
               </th>
@@ -76,19 +96,25 @@
           </thead>
           <tbody nz-tbody>
             <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
-              <td nz-td style="padding:2px;width:50px;">
+              <td nz-td style="padding:2px;padding-right:6px;width:50px;">
                 <span>{{itemIndex(i)+1}}</span>
               </td>
               <td nz-td style="padding:2px;">
-                <div *ngIf="item.error" style="color:coral;">
-                  <i class="anticon anticon-info-circle-o"></i>
-                  <span>输入数字, -9999.0 ~ 9999.0</span>
-                </div>
                 <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight">
                   <ng-template #addOnAfter>
                     <span>斤</span>
                   </ng-template>
                 </nz-input>
+              </td>
+              <td nz-td>
+                <div *ngIf="item.price" style="color:darkgreen;">
+                  <i class="anticon anticon-pay-circle-o"></i>
+                  <span>{{item.price}}</span>
+                </div>
+                <div *ngIf="!item.price" style="color:red;">
+                  <i class="anticon anticon-pay-circle-o"></i>
+                  <span>无</span>
+                </div>
               </td>
               <td nz-td>
                 <nz-popover [(nzVisible)]="popVisible[itemIndex(i)]" [nzTrigger]="'click'" [nzTitle]="'选择车次'">
@@ -122,17 +148,25 @@
           </tbody>
         </nz-table>
       </div>
+      <div style="padding-top:3px;" nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
+        <app-pay-pattern [data]="bill" (calc)="doCalc($event)"></app-pay-pattern>
+      </div>
     </div>
   </div>
-  <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
+  <div nz-row [ngStyle]="{'padding-top' : bill.totalCount === 0 ? '5px' : '0px'}">
     <div nz-col [nzSpan]="24">
       <button nz-button [nzType]="'primary'" (click)="doFinish()">
-        <span>完成</span>
+        <span>完成结算</span>
+      </button>
+      <button nz-button [nzType]="'danger'" (click)="doNew()">
+        <i class="anticon anticon-edit"></i>
+        <span style="margin:0px;">打回编辑</span>
       </button>
       <button nz-button [nzType]="'default'" (click)="doPrint()">
         <i class="anticon anticon-printer"></i>
-        <span style="margin:0px;">打印</span>
+        <span style="margin:0px;">打印结果</span>
       </button>
+
       <button nz-button [nzType]="'dashed'" (click)="goBack()">
         <i class="anticon anticon-rollback"></i>
         <span style="margin:0px;">返回列表</span>

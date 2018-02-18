@@ -87,7 +87,9 @@ export class UserOrderComponent implements OnInit {
     if (item.car) {
       carOrder = { id: item.car }
     } else {
-      carOrder = this.defaultCar
+      if (!item.id) {
+        carOrder = this.defaultCar
+      }
     }
     this.popVisible[index] = false
     this.modal.open({
@@ -258,7 +260,7 @@ export class UserOrderComponent implements OnInit {
       for (let i = 0; i < feItems.length; ++i) {
         const feItem = feItems[i]
         const dbItem = items[i]
-        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString() && feItem.car === dbItem.car)) {
+        if (!(dbItem && feItem.weight.toString() === dbItem.weight.toString() && this.isSameCar(feItem, dbItem))) {
           // tslint:disable-next-line:max-line-length
           warnings.push(`(序号 ${i + 1})=>前端: w-${feItem.weight},car-${feItem.car}, 数据库: w-${dbItem ? dbItem.weight : 'null'},car-${dbItem.car}`)
         }
@@ -275,6 +277,21 @@ export class UserOrderComponent implements OnInit {
         }
       })
     })
+  }
+  isSameCar(a: OrderItem, b: OrderItem) {
+    if (a.car) {
+      if (b.car) {
+        return a.car === b.car
+      } else {
+        return false
+      }
+    } else {
+      if (b.car) {
+        return false
+      } else {
+        return true
+      }
+    }
   }
   goBack() {
     this.router.navigate(['/user-order-list'])
