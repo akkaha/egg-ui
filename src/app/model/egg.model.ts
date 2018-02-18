@@ -44,6 +44,23 @@ export interface OrderItem {
     subject?: Subject<OrderItem>
 }
 
+export interface BillItem {
+    weight?: string
+    price?: string
+}
+
+export interface OrderBill {
+    date?: string
+    totalCount?: number
+    totalWeight?: string
+    meanWeight?: string
+    totalPrice?: string
+    meanPrice?: string
+    items?: BillItem[]
+    priceRange?: Object
+    remark?: string
+}
+
 export const DbStatus = {
     CREATING: 'creating',
     CREATED: 'created'
