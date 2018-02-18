@@ -14,6 +14,7 @@ import { CarOrderPayComponent } from './components/car-order-pay/car-order-pay.c
 import { CarOrderComponent } from './components/car-order/car-order.component';
 import { CarSelectorComponent } from './components/car-selector/car-selector.component';
 import { HomeComponent } from './components/home/home.component';
+import { PayPatternComponent } from './components/pay-pattern/pay-pattern.component';
 import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
 import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component';
 import { UserOrderComponent } from './components/user-order/user-order.component';
@@ -31,6 +32,7 @@ import { UserOrderComponent } from './components/user-order/user-order.component
     CarSelectorComponent,
     UserOrderPayComponent,
     CarOrderPayComponent,
+    PayPatternComponent,
   ],
   entryComponents: [
     CarSelectorComponent
