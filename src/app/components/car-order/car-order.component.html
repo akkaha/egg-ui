@@ -77,7 +77,7 @@
           <td nz-td style="padding:2px;">
             <div *ngIf="item.error" style="color:coral;">
               <i class="anticon anticon-info-circle-o"></i>
-              <span>输入数字, -9999.0 ~ 9999.0</span>
+              <span>输入数字, 1.0 ~ 9999.0</span>
             </div>
             <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" (ngModelChange)="itemChange(item, itemIndex(i))"
               (nzBlur)="itemBlur(item, i)">

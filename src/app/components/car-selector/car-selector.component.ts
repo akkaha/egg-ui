@@ -26,7 +26,7 @@ export class CarSelectorComponent implements OnInit {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: CarOrder[] = [{}]
+  list: CarOrder[] = []
 
   default: CarOrder = {}
   notifier: (order: CarOrder) => void = null
