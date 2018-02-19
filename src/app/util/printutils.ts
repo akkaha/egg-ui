@@ -11,7 +11,7 @@ export function printString(content: string): void {
           //........Customized style.......
           </style>
         </head>
-        <body onload="window.print();">${content}</body>
+        <body onload="window.print();window.close();">${content}</body>
       </html>`
   );
   popupWin.document.close();
