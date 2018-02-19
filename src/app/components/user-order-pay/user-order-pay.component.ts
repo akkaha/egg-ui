@@ -11,7 +11,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearOrderField, OrderBill, OrderStatus, UserOrder } from '../../model/egg.model';
+import { CarOrder, clearOrderField, OrderBill, OrderStatus, UserOrder, PriceExtra } from '../../model/egg.model';
 import { printUserOrder } from '../../util/printutils';
 
 @Component({
@@ -31,6 +31,8 @@ export class UserOrderPayComponent implements OnInit {
   pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
   defaultCar: CarOrder
   popVisible = {}
+  orderPayRes: OrderPayRes = {}
+  weightAdjustStr = ''
 
   constructor(
     private route: ActivatedRoute,
@@ -86,9 +88,23 @@ export class UserOrderPayComponent implements OnInit {
   doPrint() {
     printUserOrder(this.order, this.bill)
   }
+  setWeightAdjustStr() {
+    if (this.bill && this.bill.priceExtra) {
+      const extra = this.bill.priceExtra
+      if (extra.weightAdjust) {
+        if (extra.weightAdjust.startsWith('-')) {
+          this.weightAdjustStr = extra.weightAdjust
+        } else {
+          this.weightAdjustStr = `+${extra.weightAdjust}`
+        }
+      }
+    }
+  }
   doCalc(date: string) {
     this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
       this.bill = res.data.bill
+      this.orderPayRes = res.data
+      this.setWeightAdjustStr()
     })
   }
   goBack() {
@@ -99,19 +115,22 @@ export class UserOrderPayComponent implements OnInit {
       const id = params['id']
       if (id) {
         this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${id}`).subscribe(res => {
+          this.orderPayRes = res.data
           if (res.data.car) {
             this.defaultCar = res.data.car
           }
           this.order = res.data.order
           this.bill = res.data.bill
+          this.setWeightAdjustStr()
         })
       }
     })
   }
 }
 
-interface OrderPayRes {
-  order: UserOrder
-  bill: OrderBill
-  car: CarOrder
+export interface OrderPayRes {
+  order?: UserOrder
+  bill?: OrderBill
+  car?: CarOrder
+  priceExtra?: PriceExtra
 }

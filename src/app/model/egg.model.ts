@@ -51,6 +51,12 @@ export interface BillItem {
     price?: string
 }
 
+export interface PriceExtra {
+    id?: number
+    date?: string
+    weightAdjust?: string
+}
+
 export interface OrderBill {
     date?: string
     totalCount?: number
@@ -61,6 +67,7 @@ export interface OrderBill {
     items?: BillItem[]
     priceRange?: Object
     remark?: string
+    priceExtra?: PriceExtra
 }
 
 export const DbStatus = {

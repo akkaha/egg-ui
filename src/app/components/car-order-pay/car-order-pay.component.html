@@ -23,7 +23,7 @@
           </div>
           <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
             <span>平均重量: </span>
-            <span style="font-weight:bold;color:black;">{{bill.meanWeight}}</span>
+            <span style="font-weight:bold;color:black;">{{bill.meanWeight}} {{weightAdjustStr}}</span>
           </div>
           <div nz-col [nzMd]="4" [nzXs]="12" [nzSm]="12">
             <span>总价: </span>
@@ -93,7 +93,7 @@
               <td nz-td style="padding:2px;">
                 <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight">
                   <ng-template #addOnAfter>
-                    <span>斤</span>
+                    <span>{{weightAdjustStr}}斤</span>
                   </ng-template>
                 </nz-input>
               </td>
@@ -112,7 +112,7 @@
         </nz-table>
       </div>
       <div style="padding-top:3px;" nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
-        <app-pay-pattern [data]="bill" (calc)="doCalc($event)"></app-pay-pattern>
+        <app-pay-pattern [data]="orderPayRes" (calc)="doCalc($event)"></app-pay-pattern>
       </div>
     </div>
   </div>

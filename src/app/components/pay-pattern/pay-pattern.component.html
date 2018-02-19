@@ -24,7 +24,7 @@
         <div nz-row [nzGutter]="2">
           <button *ngIf="!priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doEdit()">
             <i class="anticon anticon-plus-square-o"></i>
-            <span style="margin:0px;">更改区间价格</span>
+            <span style="margin:0px;">更改价格配置</span>
           </button>
           <button *ngIf="priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doAddPrice()">
             <i class="anticon anticon-plus-square-o"></i>
@@ -45,6 +45,16 @@
     </p>
   </div>
   <ng-template #elseTable>
+    <div nz-row>
+      <nz-input style="width:100%;padding-bottom:2px;" [nzReadonly]="readonly || !priceEditable" [(ngModel)]="priceExtra.weightAdjust">
+        <ng-template #addOnBefore>
+          <span>重量调整</span>
+        </ng-template>
+        <ng-template #addOnAfter>
+          <span>斤</span>
+        </ng-template>
+      </nz-input>
+    </div>
     <div nz-row>
       <nz-table #nzTable [nzIsPagination]="false" [nzSize]="'small'" [nzDataSource]="prices">
         <thead nz-thead>
@@ -96,8 +106,8 @@
         <nz-alert [nzType]="'warning'" nzShowIcon>
           <div alert-body>
             <span>重量 </span>
-            <span style="color:brown;">{{missedWeights()}}</span>
-            <span> 不在区间内</span>
+            <span style="color:brown;">{{missedWeights}}</span>
+            <span> 没有价格</span>
           </div>
         </nz-alert>
       </div>

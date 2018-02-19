@@ -11,7 +11,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_CAR_ORDER_PAY, API_CAR_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearOrderField, OrderBill, OrderStatus } from '../../model/egg.model';
+import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra } from '../../model/egg.model';
 import { printCarOrder } from '../../util/printutils';
 
 @Component({
@@ -28,6 +28,8 @@ export class CarOrderPayComponent implements OnInit {
   tablePageIndex = 1
   tablePageSize = 10
   pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
+  orderPayRes: OrderPayRes = {}
+  weightAdjustStr = ''
 
   constructor(
     private route: ActivatedRoute,
@@ -76,9 +78,23 @@ export class CarOrderPayComponent implements OnInit {
   doPrint() {
     printCarOrder(this.order, this.bill)
   }
+  setWeightAdjustStr() {
+    if (this.bill && this.bill.priceExtra) {
+      const extra = this.bill.priceExtra
+      if (extra.weightAdjust) {
+        if (extra.weightAdjust.startsWith('-')) {
+          this.weightAdjustStr = extra.weightAdjust
+        } else {
+          this.weightAdjustStr = `+${extra.weightAdjust}`
+        }
+      }
+    }
+  }
   doCalc(date: string) {
     this.http.get<ApiRes<OrderPayRes>>(`${API_CAR_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
+      this.orderPayRes = res.data
       this.bill = res.data.bill
+      this.setWeightAdjustStr()
     })
   }
   goBack() {
@@ -89,8 +105,10 @@ export class CarOrderPayComponent implements OnInit {
       const id = params['id']
       if (id) {
         this.http.get<ApiRes<OrderPayRes>>(`${API_CAR_ORDER_PAY}/${id}`).subscribe(res => {
+          this.orderPayRes = res.data
           this.order = res.data.order
           this.bill = res.data.bill
+          this.setWeightAdjustStr()
         })
       }
     })
@@ -98,6 +116,7 @@ export class CarOrderPayComponent implements OnInit {
 }
 
 interface OrderPayRes {
-  order: CarOrder
-  bill: OrderBill
+  order?: CarOrder
+  bill?: OrderBill
+  rawPriceExtra?: PriceExtra
 }

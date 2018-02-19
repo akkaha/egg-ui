@@ -12,7 +12,8 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_ORDER_BILL_INSERT, API_ORDER_BILL_QUERY } from '../../api/egg.api';
 import { ApiRes, ApiResObj } from '../../model/api.model';
-import { BillItem, OrderBill } from '../../model/egg.model';
+import { BillItem, OrderBill, PriceExtra } from '../../model/egg.model';
+import { OrderPayRes } from '../user-order-pay/user-order-pay.component';
 
 @Component({
   selector: 'app-pay-pattern',
@@ -25,36 +26,33 @@ export class PayPatternComponent implements OnInit {
   _date: Date = null
   readonly = false
   priceEditable = false
+  /** used for edit and update */
   prices: BillItem[] = []
   currentDate = ''
   missed: BillItem[] = []
+  priceExtra: PriceExtra = {}
+  missedWeights = ''
 
   @Input()
-  set data(val: OrderBill) {
-    this.bill = val
-    const items = this.bill.items
-    if (items) {
-      const tmpMissed: BillItem[] = []
-      items.forEach(item => {
-        if (!item.price) {
-          tmpMissed.push(item)
-        }
-      })
-      this.missed = tmpMissed
-    }
-    const priceRange = this.bill.priceRange
-    const tmpPrices: BillItem[] = []
-    if (priceRange) {
+  set data(val: OrderPayRes) {
+    this.bill = val.bill
+    this.checkMissedWeights()
+    if (this.bill && this.bill.priceRange) {
+      const priceRange = this.bill.priceRange
+      const tmpPrices: BillItem[] = []
       // tslint:disable-next-line:forin
       for (const k in priceRange) {
         tmpPrices.push({ weight: k, price: priceRange[k] })
       }
       this.prices = tmpPrices
     }
-    if (val.date) {
-      this._date = new Date(val.date)
+    if (this.bill && this.bill.date) {
+      this._date = new Date(val.bill.date)
     } else {
       this._date = new Date()
+    }
+    if (val.priceExtra) {
+      this.priceExtra = { ...val.priceExtra }
     }
   }
   @Output() calc: EventEmitter<string> = new EventEmitter()
@@ -69,31 +67,49 @@ export class PayPatternComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
-  missedWeights() {
-    return this.missed.map(item => item.weight).join(', ')
-  }
   dateChange() {
     const date = moment(this._date).format('YYYY-MM-DD')
-    this.http.get<ApiRes<BillItem[]>>(`${API_ORDER_BILL_QUERY}/${date}`).subscribe(getRes => {
-      this.prices = getRes.data
+    this.http.get<ApiRes<{ prices: BillItem[], priceExtra: PriceExtra }>>(`${API_ORDER_BILL_QUERY}/${date}`).subscribe(getRes => {
+      this.prices = getRes.data.prices
+      this.priceExtra = getRes.data.priceExtra
     })
   }
+  checkMissedWeights() {
+    if (this.bill) {
+      const items = this.bill.items
+      if (items) {
+        const tmpMissed: BillItem[] = []
+        items.forEach(item => {
+          if (!item.price) {
+            tmpMissed.push(item)
+          }
+        })
+        this.missed = tmpMissed
+        this.missedWeights = this.missed.map(item => item.weight).join(', ')
+      }
+    }
+  }
   doSave() {
-    const r = /^[1-9]\d{0,3}(\.\d{1}){0,1}$/
-    const msg = '格式错误,输入数字, 1.0 ~ 9999.0'
+    const rangeReg = /^[1-9]\d{0,3}(\.\d{1}){0,1}$/
     for (const p of this.prices) {
-      if (!r.test(p.weight) || !r.test(p.price)) {
-        this.message.warning(msg)
+      if (!rangeReg.test(p.weight) || !rangeReg.test(p.price)) {
+        this.message.warning('格式错误,输入数字, 1.0 ~ 9999.9')
         return
       }
     }
-    if (this.prices.length > 0) {
-      const date = moment(this._date).format('YYYY-MM-DD')
-      this.http.post<ApiResObj>(`${API_ORDER_BILL_INSERT}/${date}`, this.prices).subscribe(insertRes => {
-        this.message.success(insertRes.msg)
-        this.priceEditable = false
-      })
+    if (this.priceExtra.weightAdjust) {
+      const boxReg = /^-?(0||[1-9]\d{0,3})(\.\d{1}){0,1}$/
+      if (!boxReg.test(this.priceExtra.weightAdjust)) {
+        this.message.warning('箱重格式错误,输入数字, -9999.9 ~ 9999.9')
+        return
+      }
     }
+    const date = moment(this._date).format('YYYY-MM-DD')
+    const data = { items: this.prices, priceExtra: this.priceExtra }
+    this.http.post<ApiResObj>(`${API_ORDER_BILL_INSERT}/${date}`, data).subscribe(insertRes => {
+      this.message.success(insertRes.msg)
+      this.priceEditable = false
+    })
   }
   doAddPrice() {
     this.prices.push({})
