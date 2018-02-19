@@ -12,6 +12,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
 import { CarOrder, clearOrderField, OrderBill, OrderStatus, UserOrder } from '../../model/egg.model';
+import { printUserOrder } from '../../util/printutils';
 
 @Component({
   templateUrl: './user-order-pay.component.html',
@@ -83,7 +84,7 @@ export class UserOrderPayComponent implements OnInit {
     })
   }
   doPrint() {
-
+    printUserOrder(this.order, this.bill)
   }
   doCalc(date: string) {
     this.http.get<ApiRes<OrderPayRes>>(`${API_USER_ORDER_PAY}/${this.order.id}?date=${date}`).subscribe(res => {
