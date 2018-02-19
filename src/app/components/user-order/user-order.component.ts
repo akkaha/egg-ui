@@ -271,7 +271,6 @@ export class UserOrderComponent implements OnInit {
         onOk: () => {
           this.order.status = OrderStatus.COMMITED
           this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => {
-            this.message.success('提交成功')
             this.router.navigate(['/user-order-list'])
           })
         }

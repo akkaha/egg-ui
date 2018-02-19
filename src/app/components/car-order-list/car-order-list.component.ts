@@ -105,7 +105,11 @@ export class CarOrderListComponent implements OnInit {
     const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     };
-    this.router.navigate([`/car-order/${item.id}`], navigationExtras)
+    if (OrderStatus.FINISHED === item.status) {
+      this.router.navigate([`/car-order-pay/${item.id}`], navigationExtras)
+    } else {
+      this.router.navigate([`/car-order/${item.id}`], navigationExtras)
+    }
   }
   doPay(item: CarOrder) {
     this.router.navigate([`/car-order-pay/${item.id}`])

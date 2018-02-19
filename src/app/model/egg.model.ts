@@ -5,6 +5,7 @@ export interface UserOrder {
     seller?: string
     phone?: string
     car?: number
+    bill?: string
     status?: string
     remark?: string
     createdAt?: string
@@ -16,6 +17,7 @@ export interface CarOrder {
     serial?: string
     driver?: string
     driverPhone?: string
+    bill?: string
     status?: string
     remark?: string
     createdAt?: string

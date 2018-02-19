@@ -111,7 +111,11 @@ export class UserOrderListComponent implements OnInit {
     const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
     };
-    this.router.navigate([`/user-order/${item.id}`], navigationExtras)
+    if (OrderStatus.FINISHED === item.status) {
+      this.router.navigate([`/user-order-pay/${item.id}`], navigationExtras)
+    } else {
+      this.router.navigate([`/user-order/${item.id}`], navigationExtras)
+    }
   }
   doPay(item: UserOrder) {
     this.router.navigate([`/user-order-pay/${item.id}`])

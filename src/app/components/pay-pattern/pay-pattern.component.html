@@ -20,7 +20,7 @@
       </button>
     </div>
     <ng-template #elseBtn>
-      <div nz-col [nzMd]="10" [nzXs]="10" [nzSm]="10">
+      <div *ngIf="!readonly" nz-col [nzMd]="10" [nzXs]="10" [nzSm]="10">
         <div nz-row [nzGutter]="2">
           <button *ngIf="!priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doEdit()">
             <i class="anticon anticon-plus-square-o"></i>
@@ -86,7 +86,7 @@
       </nz-table>
     </div>
     <div *ngIf="hasPrice() && !priceEditable" nz-row style="padding:3px;">
-      <div nz-col [nzSpan]="24">
+      <div *ngIf="!readonly" nz-col [nzSpan]="24">
         <button style="width:100%;" nz-button [nzType]="'primary'" [nzSize]="'default'" (click)="doCalc()">
           <i class="anticon anticon-calculator"></i>
           <span style="margin:0px;">计算</span>

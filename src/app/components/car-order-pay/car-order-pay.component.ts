@@ -49,8 +49,12 @@ export class CarOrderPayComponent implements OnInit {
       title: `确认完成`,
       content: `编号: ${this.order.id}, 姓名: ${this.order.driver}, 手机: ${this.order.driverPhone}, 数量: ${this.bill.totalCount}.`,
       onOk: () => {
-        this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
+        const toUpdate = clearOrderField(this.order)
+        toUpdate.status = OrderStatus.FINISHED
+        toUpdate.bill = JSON.stringify(this.bill)
+        this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, toUpdate).subscribe(res => {
           this.message.success('提交成功')
+          this.readonly = true
           this.order.status = OrderStatus.FINISHED
         })
       }
@@ -63,7 +67,6 @@ export class CarOrderPayComponent implements OnInit {
       onOk: () => {
         this.order.status = OrderStatus.NEW
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
-          this.message.success('操作成功')
           this.goBack()
         })
       }
