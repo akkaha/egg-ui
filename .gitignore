@@ -3,8 +3,10 @@
 # compiled output
 /dist
 /dist-server
+/static
 /tmp
 /out-tsc
+*.tar.gz
 
 # dependencies
 /node_modules
