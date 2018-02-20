@@ -132,6 +132,9 @@
       </tbody>
     </nz-table>
   </div>
+  <div nz-row style="padding-bottom:10px;">
+    <app-pop-input (enter)="onEnter($event)"></app-pop-input>
+  </div>
   <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
     <div nz-col [nzSpan]="24">
       <button *ngIf="!readonly" nz-button [nzType]="'primary'" (click)="doAddEmptyItem()">

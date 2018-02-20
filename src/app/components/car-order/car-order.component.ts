@@ -33,8 +33,8 @@ export class CarOrderComponent implements OnInit {
   weightCache: { [key: string]: string } = {}
   readonly = false
   tablePageIndex = 1
-  tablePageSize = 10
-  pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
+  tablePageSize = 5
+  pageSizeSelectorValues = [5, 10, 20, 30, 40, 50, 100, 200]
 
   constructor(
     private route: ActivatedRoute,
@@ -57,6 +57,20 @@ export class CarOrderComponent implements OnInit {
   }
   orderChange() {
     this.orderSubject.next()
+  }
+  onEnter(weight: string) {
+    this.doAddNewItem(weight)
+  }
+  doAddNewItem(weight: string) {
+    const orderItemUploadSubject = new Subject<OrderItem>()
+    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+      this.doUpload(item)
+    })
+    const newItem = { status: '待上传', subject: orderItemUploadSubject, weight: weight }
+    this.values.push(newItem)
+    this.refreshTableData()
+    this.tablePageIndex = Math.ceil(this.values.length / this.tablePageSize)
+    orderItemUploadSubject.next(newItem)
   }
   itemChange(item: OrderItem, index: number) {
     if (index === this.values.length - 1) {
@@ -231,13 +245,13 @@ export class CarOrderComponent implements OnInit {
             this.values.push(item)
           }
           if (!this.readonly) {
-            this.doAddEmptyItem()
+            // this.doAddEmptyItem()
           }
           this.refreshTableData()
         })
       } else {
         // new
-        this.doAddEmptyItem()
+        // this.doAddEmptyItem()
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_INSERT, {}).subscribe(res => {
           this.order = res.data
           this.orderSubject.debounceTime(800).subscribe(() => {

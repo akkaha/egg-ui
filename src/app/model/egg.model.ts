@@ -33,7 +33,7 @@ export const OrderStatus = {
 
 export interface OrderItem {
     id?: number
-    weight?: number
+    weight?: string
     user?: number
     car?: number
     createdAt?: string

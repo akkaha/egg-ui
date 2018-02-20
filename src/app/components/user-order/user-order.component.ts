@@ -43,8 +43,8 @@ export class UserOrderComponent implements OnInit {
   weightCache: { [key: string]: string } = {}
   readonly = false
   tablePageIndex = 1
-  tablePageSize = 10
-  pageSizeSelectorValues = [10, 20, 30, 40, 50, 100, 200, 500]
+  tablePageSize = 5
+  pageSizeSelectorValues = [5, 10, 20, 30, 40, 50, 100, 200]
   defaultCar: CarOrder
   popVisible: { [key: string]: boolean } = {}
 
@@ -128,6 +128,9 @@ export class UserOrderComponent implements OnInit {
   }
   orderChange() {
     this.orderSubject.next()
+  }
+  onEnter(weight: string) {
+    this.doAddNewItem(weight)
   }
   itemChange(item: OrderItem, index: number) {
     if (index === this.values.length - 1) {
@@ -233,6 +236,17 @@ export class UserOrderComponent implements OnInit {
       }
     }
   }
+  doAddNewItem(weight: string) {
+    const orderItemUploadSubject = new Subject<OrderItem>()
+    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+      this.doUpload(item)
+    })
+    const newItem = { status: '待上传', subject: orderItemUploadSubject, weight: weight }
+    this.values.push(newItem)
+    this.refreshTableData()
+    this.tablePageIndex = Math.ceil(this.values.length / this.tablePageSize)
+    orderItemUploadSubject.next(newItem)
+  }
   doAddEmptyItem() {
     // one item to one suject to reduce conflict
     const orderItemUploadSubject = new Subject<OrderItem>()
@@ -325,13 +339,13 @@ export class UserOrderComponent implements OnInit {
             this.values.push(item)
           }
           if (!this.readonly) {
-            this.doAddEmptyItem()
+            // this.doAddEmptyItem()
           }
           this.refreshTableData()
         })
       } else {
         // new
-        this.doAddEmptyItem()
+        // this.doAddEmptyItem()
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_INSERT, {}).subscribe(res => {
           this.order = res.data
           this.orderSubject.debounceTime(800).subscribe(() => {
