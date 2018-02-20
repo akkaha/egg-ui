@@ -49,13 +49,13 @@ export class PopInuptComponent implements OnInit {
       this.enter.emit(this.weight)
       if (this.sound) {
         stopSpeak()
-        speak(this.weight, { rate: 2 })
+        speak(this.weight, { rate: 1.3 })
       }
       this.weight = ''
     } else {
       if (this.sound) {
         stopSpeak()
-        speak('输入格式错误, 请输入 从一 到 九千九百九十九点九 的数字', { rate: 1.5 })
+        speak(`${this.weight}  俺  不认识, 请输入 从一 到 九千九百九十九点九 的数字`, { rate: 1.3 })
       } else {
         this.message.error('格式错误, 输入: 1.0 ~ 9999.9')
       }
