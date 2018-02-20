@@ -106,7 +106,7 @@
       </tbody>
     </nz-table>
   </div>
-  <div nz-row style="padding-bottom:10px;">
+  <div *ngIf="!readonly" nz-row style="padding-bottom:10px;">
     <app-pop-input (enter)="onEnter($event)"></app-pop-input>
   </div>
   <div nz-row [ngStyle]="{'padding-top' : values.length === 0 ? '5px' : '0px'}">
