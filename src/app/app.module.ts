@@ -18,6 +18,7 @@ import { PayPatternComponent } from './components/pay-pattern/pay-pattern.compon
 import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
 import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component';
 import { UserOrderComponent } from './components/user-order/user-order.component';
+import { PopInuptComponent } from './components/pop-input/pop-inupt.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { UserOrderComponent } from './components/user-order/user-order.component
     UserOrderPayComponent,
     CarOrderPayComponent,
     PayPatternComponent,
+    PopInuptComponent,
   ],
   entryComponents: [
     CarSelectorComponent

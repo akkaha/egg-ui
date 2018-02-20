@@ -1,0 +1,14 @@
+<div>
+  <div nz-row [nzGutter]="2">
+    <div nz-col [nzSpan]="24">
+      <nz-input style="padding-left:5px;" [nzSize]="'large'" [nzType]="'text'" [nzPlaceHolder]="'输入重量, 按输入法回车或开始 发送'" [(ngModel)]="weight"
+        (keyup.enter)="keyEnter()">
+        <ng-template #prefix>
+          <span [ngStyle]="soundStyle" (click)="soundClick();$event.stopPropagation();">
+            <i class="anticon anticon-sound click-icon"></i>
+          </span>
+        </ng-template>
+      </nz-input>
+    </div>
+  </div>
+</div>

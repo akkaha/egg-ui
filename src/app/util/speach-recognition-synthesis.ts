@@ -14,7 +14,6 @@ export interface VoiceParams {
     rate?: number
     /** 0 to 2 */
     pitch?: number
-    lang?: string
 }
 
 export function speak(msg: string, params?: VoiceParams): void {
@@ -30,11 +29,14 @@ export function speak(msg: string, params?: VoiceParams): void {
             if (params.pitch && params.pitch >= 0 && params.pitch <= 2) {
                 voice.pitch = params.pitch
             }
-            if (params.lang) {
-                voice.lang = params.lang
-            }
         }
         window.speechSynthesis.speak(voice)
+    }
+}
+
+export function stopSpeak() {
+    if (canSpeack()) {
+        window.speechSynthesis.cancel()
     }
 }
 
