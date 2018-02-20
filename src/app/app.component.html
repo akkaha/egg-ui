@@ -1,6 +1,6 @@
 <div>
   <nz-layout style="height:100%;background:white;">
-    <nz-header style="height:48px;padding:0px;">
+    <nz-header id="non-printable" style="height:48px;padding:0px;">
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 48px;">
         <li nz-menu-item style="height:47px;" routerLinkActive="ant-menu-item-selected">
           <a routerLink="/home">首页</a>
@@ -21,7 +21,7 @@
         </li>
       </ul>
     </nz-header>
-    <nz-content style="padding:10px 15px;">
+    <nz-content class="nz-content">
       <router-outlet></router-outlet>
     </nz-content>
   </nz-layout>

@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+
+.nz-content {
+  padding: 10px 15px;
+}
+@media print {
+  @page {
+    size: 234mm 91mm;
+  }
+  /* body * {
+    visibility: hidden;
+  }
+  #to-print,
+  #to-print * {
+    visibility: visible;
+  }
+  #to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  } */
+  .nz-content {
+    padding: 0px 0px;
+  }
+  #non-printable {
+    display: none;
+  }
+  #printable {
+    display: block;
+  }
+}
