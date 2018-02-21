@@ -1,0 +1,115 @@
+<div style="background-color:white;">
+  <div class="non-printable print-control">
+    <div nz-row [nzGutter]="3">
+      <div nz-col [nzSpan]="4">
+        <nz-input [(ngModel)]="config.title" (ngModelChange)="saveToLocal()">
+          <ng-template #addOnBefore>
+            <span>标题:</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.colCount" (ngModelChange)="colCountChange()">
+          <ng-template #addOnBefore>
+            <span>每行个数:</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.style.top" (ngModelChange)="colCountChange()">
+          <ng-template #addOnBefore>
+            <span>上内边距(mm):</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.style.left" (ngModelChange)="colCountChange()">
+          <ng-template #addOnBefore>
+            <span>左内边距(mm):</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.style.bottom" (ngModelChange)="colCountChange()">
+          <ng-template #addOnBefore>
+            <span>下内边距(mm):</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.style.right" (ngModelChange)="colCountChange()">
+          <ng-template #addOnBefore>
+            <span>右内边距(mm):</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showBorder" (ngModelChange)="saveToLocal()">
+          <span>显示边框</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <button nz-button [nzType]="'primary'" (click)="print()">
+          <i class="anticon anticon-printer"></i>
+          <span style="margin:0px;">打印</span>
+        </button>
+        <button nz-button [nzSize]="'small'" [nzType]="'dash'" [nzShape]="'circle'" (click)="goBack()">
+          <i class="anticon anticon-rollback"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="printable print-container" [ngStyle]="paddingStyle()">
+    <div>
+      <div nz-row>
+        <div class="print-title">
+          <span class="print-title-text">
+            <pre>{{config.title}}</pre>
+          </span>
+        </div>
+      </div>
+      <div nz-row [nzGutter]="3" style="padding:5px;">
+        <div class="no-wrap" nz-col nzSpan="4">
+          <span>姓名:</span>
+          <span class="value-text">{{order.seller}}</span>
+        </div>
+        <div class="no-wrap" nz-col nzSpan="4">
+          <span>件数:</span>
+          <span class="value-text">{{bill.totalCount}}</span>
+        </div>
+        <div class="no-wrap" nz-col nzSpan="11">
+          <span>时间:</span>
+          <span class="value-text">{{bill.date}}</span>
+        </div>
+        <div class="no-wrap" nz-col nzSpan="5" style="text-align:right;">
+          <span>户单号:</span>
+          <span class="value-text">{{order.id}}</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top:3px;">
+      <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+        <tbody nz-tbody>
+          <tr *ngFor="let row of rows;let r = index">
+            <td *ngFor="let col of cols;let c = index" nz-td style="padding:5px;">
+              <span>{{w(r,c)}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div nz-row [nzGutter]="3" style="padding:5px;">
+      <div class="no-wrap" nz-col nzSpan="4">
+        <span>总重:</span>
+        <span class="foot-text">{{bill.totalWeight}}</span>
+      </div>
+      <div class="no-wrap" nz-col nzSpan="4">
+        <span>平均重量:</span>
+        <span class="foot-text">{{bill.meanWeight}}{{weightAdjustStr}}</span>
+      </div>
+      <div class="no-wrap" nz-col nzSpan="16">
+        <span class="foot-text">{{bill.meanPrice}} x {{bill.totalCount}} = {{bill.totalPrice}} 元</span>
+      </div>
+    </div>
+  </div>
+</div>

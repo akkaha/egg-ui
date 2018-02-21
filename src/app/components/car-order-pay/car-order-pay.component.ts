@@ -12,7 +12,6 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 import { API_CAR_ORDER_PAY, API_CAR_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
 import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra } from '../../model/egg.model';
-import { printCarOrder } from '../../util/printutils';
 
 @Component({
   templateUrl: './car-order-pay.component.html',
@@ -76,7 +75,7 @@ export class CarOrderPayComponent implements OnInit {
     })
   }
   doPrint() {
-    printCarOrder(this.order, this.bill)
+    this.router.navigate([`/car-order-print/${this.order.id}`])
   }
   setWeightAdjustStr() {
     if (this.bill && this.bill.priceExtra) {

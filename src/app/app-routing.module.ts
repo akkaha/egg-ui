@@ -9,6 +9,8 @@ import { CarOrderComponent } from './components/car-order/car-order.component';
 import { CarOrderListComponent } from './components/car-order-list/car-order-list.component';
 import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component';
 import { CarOrderPayComponent } from './components/car-order-pay/car-order-pay.component';
+import { UserOrderPrintComponent } from './components/user-order-print/user-order-print.component';
+import { CarOrderPrintComponent } from './components/car-order-print/car-order-print.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'new-car-order', component: CarOrderComponent },
   { path: 'user-order-pay/:id', component: UserOrderPayComponent },
   { path: 'car-order-pay/:id', component: CarOrderPayComponent },
+  { path: 'user-order-print/:id', component: UserOrderPrintComponent },
+  { path: 'car-order-print/:id', component: CarOrderPrintComponent },
   { path: '**', redirectTo: 'home' },
 ]
 

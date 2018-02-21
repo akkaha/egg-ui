@@ -88,6 +88,10 @@
               <i class="anticon anticon-eye-o"></i>
               <span style="margin:0px;">查看</span>
             </button>
+            <button *ngIf="canPrint(item)" [nzSize]="'small'" nz-button [nzType]="'default'" (click)="doPrint(item)">
+              <i class="anticon anticon-printer"></i>
+              <span style="margin:0px;">打印</span>
+            </button>
             <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="doDelete(item)">
               <i class="anticon anticon-delete"></i>
             </button>

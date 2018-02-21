@@ -88,6 +88,9 @@ export class CarOrderListComponent implements OnInit {
   canDeal(item: CarOrder) {
     return item.status === OrderStatus.COMMITED
   }
+  canPrint(item: CarOrder) {
+    return item.status === OrderStatus.FINISHED
+  }
   canRestore(item: CarOrder) {
     return item.status === OrderStatus.DEPRECATED
   }
@@ -113,6 +116,9 @@ export class CarOrderListComponent implements OnInit {
   }
   doPay(item: CarOrder) {
     this.router.navigate([`/car-order-pay/${item.id}`])
+  }
+  doPrint(item: CarOrder) {
+    this.router.navigate([`/car-order-print/${item.id}`])
   }
   doRestore(item: CarOrder) {
     const order: CarOrder = { id: item.id, status: OrderStatus.NEW }

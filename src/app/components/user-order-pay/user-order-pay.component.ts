@@ -11,8 +11,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearOrderField, OrderBill, OrderStatus, UserOrder, PriceExtra } from '../../model/egg.model';
-import { printUserOrder } from '../../util/printutils';
+import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra, UserOrder } from '../../model/egg.model';
 
 @Component({
   templateUrl: './user-order-pay.component.html',
@@ -86,7 +85,7 @@ export class UserOrderPayComponent implements OnInit {
     })
   }
   doPrint() {
-    printUserOrder(this.order, this.bill)
+    this.router.navigate([`/user-order-print/${this.order.id}`])
   }
   setWeightAdjustStr() {
     if (this.bill && this.bill.priceExtra) {

@@ -88,6 +88,9 @@ export class UserOrderListComponent implements OnInit {
   canDeal(item: UserOrder) {
     return item.status === OrderStatus.COMMITED
   }
+  canPrint(item: UserOrder) {
+    return item.status === OrderStatus.FINISHED
+  }
   canRestore(item: UserOrder) {
     return item.status === OrderStatus.DEPRECATED
   }
@@ -119,6 +122,9 @@ export class UserOrderListComponent implements OnInit {
   }
   doPay(item: UserOrder) {
     this.router.navigate([`/user-order-pay/${item.id}`])
+  }
+  doPrint(item: UserOrder) {
+    this.router.navigate([`/user-order-print/${item.id}`])
   }
   doRestore(item: UserOrder) {
     // this.modal.confirm({

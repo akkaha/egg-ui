@@ -3,6 +3,14 @@
 .nz-content {
   padding: 10px 15px;
 }
+.print-container {
+  box-shadow: 0px 0px 20px wheat;
+  transition:All 0.4s ease-in-out;
+  cursor: pointer;
+}
+.print-container:hover {
+  transform:scale(1.01);
+}
 @media print {
   @page {
     size: 234mm 91mm;
@@ -22,10 +30,13 @@
   .nz-content {
     padding: 0px 0px;
   }
-  #non-printable {
+  .non-printable {
     display: none;
   }
-  #printable {
+  .printable {
     display: block;
+  }
+  .print-container {
+    box-shadow: 0px 0px;
   }
 }

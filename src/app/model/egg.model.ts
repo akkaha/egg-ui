@@ -70,6 +70,30 @@ export interface OrderBill {
     priceExtra?: PriceExtra
 }
 
+export interface PrintConfig {
+    colCount?: number
+    title?: string
+    showBorder?: boolean
+    style?: {
+        top?: string
+        left?: string
+        bottom?: string
+        right?: string
+    }
+}
+
+export const DefaultPrintConfig = {
+    colCount: 10,
+    title: '🥚河北 方成🥚',
+    showBorder: false,
+    style: {
+        top: '0',
+        left: '0',
+        bottom: '0',
+        right: '0',
+    }
+}
+
 export const DbStatus = {
     CREATING: 'creating',
     CREATED: 'created'
