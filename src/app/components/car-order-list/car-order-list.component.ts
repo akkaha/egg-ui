@@ -27,6 +27,7 @@ export class CarOrderListComponent implements OnInit {
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
   list: CarOrder[] = []
+  countMap: { [key: number]: number } = {}
 
   constructor(
     private route: ActivatedRoute,
@@ -38,14 +39,27 @@ export class CarOrderListComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  itemCount(item: CarOrder) {
+    if (this.countMap) {
+      const count = this.countMap[item.id]
+      if (count) {
+        return count
+      } else {
+        return 0
+      }
+    } else {
+      return 0
+    }
+  }
   doSearch() {
     this.current = 1
     this.load()
   }
   load() {
     this.http.post<ApiRes<CarOrder[]>>(API_CAR_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
-      this.list = res.data.records
+      this.list = res.data.list
       this.total = res.data.total
+      this.countMap = res.data['count']
     })
   }
   statusColor(status: string) {

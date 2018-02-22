@@ -50,6 +50,9 @@
             <span>车牌</span>
           </th>
           <th nz-th style="white-space:nowrap;">
+            <span>数量</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
             <span>状态</span>
           </th>
           <th nz-th style="white-space:nowrap;">
@@ -73,6 +76,9 @@
           </td>
           <td nz-td>
             <span>{{item.serial}}</span>
+          </td>
+          <td nz-td>
+            <span>{{itemCount(item)}}</span>
           </td>
           <td nz-td>
             <nz-tag [nzColor]="statusColor(item.status)">{{statusName(item.status)}}</nz-tag>

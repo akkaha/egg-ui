@@ -12,6 +12,10 @@ export interface UserOrder {
     updatedAt?: string
 }
 
+export interface ListUserOrderItem extends UserOrder {
+    checked?: boolean
+}
+
 export interface CarOrder {
     id?: number
     serial?: string

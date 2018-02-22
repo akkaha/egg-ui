@@ -27,9 +27,25 @@
     </div>
   </div>
   <div style="padding-top:13px;">
-    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="list" [nzIsPagination]="false">
+    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="list" [nzIsPagination]="false" [nzShowTitle]="checkedNumber">
+      <div nz-table-title>
+        <div>
+          <div>
+            <span style="margin-left: 8px;" *ngIf="checkedNumber">
+              <span>选择了 {{checkedNumber}} 单, 共 </span>
+              <span style="color:red;">{{checkedItemCount}}</span>
+              <span> 箱.</span>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="addToCar()">加入车次</a>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="removeFromCar()">全部移出车次</a>
+            </span>
+          </div>
+        </div>
+      </div>
       <thead nz-thead>
         <tr>
+          <th nz-th nzCheckbox>
+            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
+          </th>
           <th nz-th style="white-space:nowrap;">
             <span>单号</span>
           </th>
@@ -38,6 +54,9 @@
           </th>
           <th nz-th style="white-space:nowrap;">
             <span>手机</span>
+          </th>
+          <th nz-th style="white-space:nowrap;">
+            <span>数量</span>
           </th>
           <th nz-th style="white-space:nowrap;">
             <span>状态</span>
@@ -52,6 +71,9 @@
       </thead>
       <tbody nz-tbody>
         <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
+          <td nz-td nzCheckbox>
+            <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="refreshStatus($event)"></label>
+          </td>
           <td nz-td style="width:100px;">
             <span>{{item.id}}</span>
           </td>
@@ -60,6 +82,9 @@
           </td>
           <td nz-td>
             <span>{{item.phone}}</span>
+          </td>
+          <td nz-td>
+            <span>{{itemCount(item)}}</span>
           </td>
           <td nz-td>
             <nz-tag [nzColor]="statusColor(item.status)">{{statusName(item.status)}}</nz-tag>

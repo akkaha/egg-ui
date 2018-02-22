@@ -8,7 +8,8 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_USER_ORDER_DELETE, API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { OrderStatus, UserOrder } from '../../model/egg.model';
+import { ListUserOrderItem, OrderStatus, UserOrder, CarOrder } from '../../model/egg.model';
+import { CarSelectorComponent } from '../car-selector/car-selector.component';
 
 @Component({
   templateUrl: './user-order-list.component.html',
@@ -16,6 +17,11 @@ import { OrderStatus, UserOrder } from '../../model/egg.model';
 })
 export class UserOrderListComponent implements OnInit {
 
+  allChecked = false
+  indeterminate = false
+  checkedNumber = 0
+  checkedItemCount = 0
+  checkedItems: ListUserOrderItem[] = []
   search: UserOrder = {}
   total = 0
   current = 1
@@ -26,7 +32,9 @@ export class UserOrderListComponent implements OnInit {
     { label: '完成', value: OrderStatus.FINISHED },
     { label: '废弃', value: OrderStatus.DEPRECATED },
   ]
-  list: UserOrder[] = []
+  list: ListUserOrderItem[] = []
+  countMap: { [key: number]: number } = {}
+
 
   constructor(
     private route: ActivatedRoute,
@@ -38,14 +46,74 @@ export class UserOrderListComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  addToCar() {
+    this.modal.open({
+      title: '选择车次',
+      content: CarSelectorComponent,
+      onOk() { },
+      onCancel() { },
+      footer: false,
+      width: 640,
+      componentParams: {
+        onSelect: (selectedCar: CarOrder) => {
+          console.log('select:', selectedCar)
+        }
+      }
+    })
+    console.log(this.checkedItems)
+  }
+  removeFromCar() {
+    console.log(this.checkedItems)
+  }
+  refreshStatus() {
+    const allChecked = this.list.every(value => value.checked === true)
+    const allUnChecked = this.list.every(value => !value.checked)
+    this.allChecked = allChecked
+    this.indeterminate = (!allChecked) && (!allUnChecked)
+    this.checkedItems = this.list.filter(value => value.checked)
+    this.checkedNumber = this.checkedItems.length
+    let total = 0
+    this.checkedItems.forEach(item => {
+      const count = this.countMap[item.id]
+      if (count) {
+        total += count
+      }
+    })
+    this.checkedItemCount = total
+  }
+  checkAll(value) {
+    if (value) {
+      this.list.forEach(item => {
+        item.checked = true
+      })
+    } else {
+      this.list.forEach(item => {
+        item.checked = false
+      })
+    }
+    this.refreshStatus()
+  }
+  itemCount(item: UserOrder) {
+    if (this.countMap) {
+      const count = this.countMap[item.id]
+      if (count) {
+        return count
+      } else {
+        return 0
+      }
+    } else {
+      return 0
+    }
+  }
   doSearch() {
     this.current = 1
     this.load()
   }
   load() {
     this.http.post<ApiRes<UserOrder[]>>(API_USER_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
-      this.list = res.data.records
+      this.list = res.data.list
       this.total = res.data.total
+      this.countMap = res.data['count']
     })
   }
   statusColor(status: string) {
@@ -95,17 +163,11 @@ export class UserOrderListComponent implements OnInit {
     return item.status === OrderStatus.DEPRECATED
   }
   doDeprecate(item: UserOrder) {
-    // this.modal.confirm({
-    //   title: '废弃',
-    //   content: `确认废弃吗?`,
-    //   onOk: () => {
     const order: UserOrder = { id: item.id, status: OrderStatus.DEPRECATED }
     this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
-    //   }
-    // })
   }
   doEdit(item: UserOrder) {
     this.router.navigate([`/user-order/${item.id}`])
@@ -113,7 +175,7 @@ export class UserOrderListComponent implements OnInit {
   doView(item: UserOrder) {
     const navigationExtras: NavigationExtras = {
       queryParams: { 'readonly': '' },
-    };
+    }
     if (OrderStatus.FINISHED === item.status) {
       this.router.navigate([`/user-order-pay/${item.id}`], navigationExtras)
     } else {
@@ -127,17 +189,11 @@ export class UserOrderListComponent implements OnInit {
     this.router.navigate([`/user-order-print/${item.id}`])
   }
   doRestore(item: UserOrder) {
-    // this.modal.confirm({
-    //   title: '恢复',
-    //   content: `确认恢复吗?`,
-    //   onOk: () => {
     const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
     this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, order).subscribe(res => {
       this.message.success('更新成功')
       this.load()
     })
-    //   }
-    // })
   }
   doDelete(item: UserOrder) {
     this.modal.confirm({

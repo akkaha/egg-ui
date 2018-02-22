@@ -58,7 +58,7 @@ export class CarSelectorComponent implements OnInit {
   }
   load() {
     this.http.post<ApiRes<CarOrder[]>>(API_CAR_ORDER_QUERY, { ...this.search, current: this.current, size: this.size }).subscribe(res => {
-      this.list = res.data.records
+      this.list = res.data.list
       this.total = res.data.total
     })
   }
