@@ -2,6 +2,12 @@
 
 > A simple front end for [Egg🥚](https://github.com/akkaha/egg) 
 
+![](./docs/assets/images/egg-commit.gif)
+
+![](./docs/assets/images/egg-deal.png)
+
+![](./docs/assets/images/egg-print.gif)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.8.
 
 ## Development server
