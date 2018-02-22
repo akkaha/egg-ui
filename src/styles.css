@@ -11,6 +11,9 @@
 .print-container:hover {
   transform:scale(1.01);
 }
+.printable {
+  color: black;
+}
 @media print {
   @page {
     size: 234mm 91mm;
@@ -34,6 +37,7 @@
     display: none;
   }
   .printable {
+    color: black;
     display: block;
   }
   .print-container {

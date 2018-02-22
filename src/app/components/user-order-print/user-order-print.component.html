@@ -91,7 +91,7 @@
       <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
         <tbody nz-tbody>
           <tr *ngFor="let row of rows;let r = index">
-            <td *ngFor="let col of cols;let c = index" nz-td style="padding:5px;">
+            <td *ngFor="let col of cols;let c = index" nz-td style="padding:5px;color:black;">
               <span>{{w(r,c)}}</span>
             </td>
           </tr>
