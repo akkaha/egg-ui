@@ -11,7 +11,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 
 import { API_USER_ORDER_PAY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder } from '../../model/egg.model';
+import { CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder, BillItem } from '../../model/egg.model';
 import { OrderPayRes } from '../user-order-pay/user-order-pay.component';
 
 @Component({
@@ -26,10 +26,11 @@ export class UserOrderPrintComponent implements OnInit {
   car: CarOrder
   weightAdjustStr = ''
 
-  values: string[] = []
+  values: BillItem[] = []
 
   cols = []
   rows = []
+  empRows = []
 
   CONFIG_KEY = 'user-print-config'
   config: PrintConfig = DefaultPrintConfig
@@ -79,6 +80,20 @@ export class UserOrderPrintComponent implements OnInit {
           } else {
             config.colCount = num
           }
+        } else {
+          config.colCount = DefaultPrintConfig.colCount
+        }
+        if (config.empRowCount) {
+          let num = parseInt(config.empRowCount.toString(), 10)
+          if (num < 0 || Number.isNaN(num)) {
+            num = 0
+            config.empRowCount = num
+            this.saveToLocal()
+          } else {
+            config.empRowCount = num
+          }
+        } else {
+          config.empRowCount = DefaultPrintConfig.empRowCount
         }
         if (!config.style) {
           config.style = {}
@@ -89,6 +104,21 @@ export class UserOrderPrintComponent implements OnInit {
       console.log(error)
     }
     this.cols.length = this.config.colCount
+    this.empRows.length = this.config.empRowCount
+  }
+  empRowCountChange() {
+    let num = 0
+    try {
+      num = parseInt(this.config.empRowCount.toString(), 10)
+      if (num < 0 || Number.isNaN(num)) {
+        num = 0
+      }
+    } catch (error) {
+      num = 0
+    }
+    this.config.empRowCount = num
+    this.empRows.length = num
+    this.saveToLocal()
   }
   colCountChange() {
     let num = 10
@@ -106,7 +136,16 @@ export class UserOrderPrintComponent implements OnInit {
   }
   w(r: number, c: number) {
     const i = r * this.config.colCount + c
-    return this.values[i] || ''
+    const item = this.values[i]
+    if (item) {
+      if (this.config.showItemPrice) {
+        return `${item.weight} - ${item.price}元`
+      } else {
+        return item.weight
+      }
+    } else {
+      return ''
+    }
   }
   print() {
     window.print()
@@ -137,10 +176,8 @@ export class UserOrderPrintComponent implements OnInit {
               }
             }
             if (this.bill.items) {
-              const tmp = []
               const items = this.bill.items
-              items.forEach(item => tmp.push(item.weight))
-              this.values = tmp
+              this.values = items
               this.rows.length = Math.ceil(this.values.length / this.config.colCount)
             }
           }

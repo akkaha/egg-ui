@@ -72,8 +72,14 @@ export interface OrderBill {
 
 export interface PrintConfig {
     colCount?: number
+    empRowCount?: number
     title?: string
     showBorder?: boolean
+    showItemPrice?: boolean,
+    showTotalWeight?: boolean,
+    showMeanWeight?: boolean,
+    showTotalPrice?: boolean,
+    showFormula?: boolean,
     style?: {
         top?: string
         left?: string
@@ -84,8 +90,14 @@ export interface PrintConfig {
 
 export const DefaultPrintConfig = {
     colCount: 10,
+    empRowCount: 0,
     title: '🥚河北 方成🥚',
     showBorder: false,
+    showItemPrice: false,
+    showTotalWeight: true,
+    showMeanWeight: false,
+    showTotalPrice: true,
+    showFormula: false,
     style: {
         top: '0',
         left: '0',

@@ -1,7 +1,7 @@
 <div style="background-color:white;">
   <div class="non-printable print-control">
     <div nz-row [nzGutter]="3">
-      <div nz-col [nzSpan]="4">
+      <div nz-col [nzSpan]="3">
         <nz-input [(ngModel)]="config.title" (ngModelChange)="saveToLocal()">
           <ng-template #addOnBefore>
             <span>标题:</span>
@@ -12,6 +12,13 @@
         <nz-input [(ngModel)]="config.colCount" (ngModelChange)="colCountChange()">
           <ng-template #addOnBefore>
             <span>每行个数:</span>
+          </ng-template>
+        </nz-input>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-input [(ngModel)]="config.empRowCount" (ngModelChange)="empRowCountChange()">
+          <ng-template #addOnBefore>
+            <span>空行个数:</span>
           </ng-template>
         </nz-input>
       </div>
@@ -43,11 +50,6 @@
           </ng-template>
         </nz-input>
       </div>
-      <div nz-col [nzSpan]="2">
-        <label nz-checkbox [(ngModel)]="config.showBorder" (ngModelChange)="saveToLocal()">
-          <span>显示边框</span>
-        </label>
-      </div>
       <div nz-col [nzSpan]="3">
         <button nz-button [nzType]="'primary'" (click)="print()">
           <i class="anticon anticon-printer"></i>
@@ -56,6 +58,38 @@
         <button nz-button [nzSize]="'small'" [nzType]="'dash'" [nzShape]="'circle'" (click)="goBack()">
           <i class="anticon anticon-rollback"></i>
         </button>
+      </div>
+    </div>
+    <div nz-row style="padding-top:3px;" [nzGutter]="3">
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showBorder" (ngModelChange)="saveToLocal()">
+          <span>显示边框</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showItemPrice" (ngModelChange)="saveToLocal()">
+          <span>显示单价</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showTotalWeight" (ngModelChange)="saveToLocal()">
+          <span>显示总重</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showMeanWeight" (ngModelChange)="saveToLocal()">
+          <span>显示均重</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showTotalPrice" (ngModelChange)="saveToLocal()">
+          <span>显示总价</span>
+        </label>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <label nz-checkbox [(ngModel)]="config.showFormula" (ngModelChange)="saveToLocal()">
+          <span>显示总价算式</span>
+        </label>
       </div>
     </div>
   </div>
@@ -81,7 +115,7 @@
           <span>时间:</span>
           <span class="value-text">{{bill.date}}</span>
         </div>
-        <div class="no-wrap" nz-col nzSpan="5" style="text-align:right;">
+        <div class="no-wrap" nz-col nzSpan="5" style="text-align:right;padding-right:3px;">
           <span>户单号:</span>
           <span class="value-text">{{order.id}}</span>
         </div>
@@ -95,20 +129,29 @@
               <span>{{w(r,c)}}</span>
             </td>
           </tr>
+          <tr *ngFor="let row of empRows;let r = index">
+            <td *ngFor="let col of cols;let c = index" nz-td>
+              <span style="visibility: hidden;">-</span>
+            </td>
+          </tr>
         </tbody>
       </nz-table>
     </div>
     <div nz-row [nzGutter]="3" style="padding:5px;">
-      <div class="no-wrap" nz-col nzSpan="4">
+      <div *ngIf="config.showTotalWeight" class="no-wrap" nz-col nzSpan="4">
         <span>总重:</span>
         <span class="foot-text">{{bill.totalWeight}}</span>
       </div>
-      <div class="no-wrap" nz-col nzSpan="4">
+      <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="4">
         <span>平均重量:</span>
         <span class="foot-text">{{bill.meanWeight}}{{weightAdjustStr}}</span>
       </div>
-      <div class="no-wrap" nz-col nzSpan="16">
-        <span class="foot-text">{{bill.meanPrice}} x {{bill.totalCount}} = {{bill.totalPrice}} 元</span>
+      <div *ngIf="config.showTotalPrice" class="no-wrap" nz-col nzSpan="16">
+        <span>总价:</span>
+        <span class="foot-text">
+          <span *ngIf="config.showFormula">{{bill.meanPrice}} x {{bill.totalCount}} = </span>
+          <span>{{bill.totalPrice}} 元</span>
+        </span>
       </div>
     </div>
   </div>
