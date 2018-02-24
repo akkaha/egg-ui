@@ -50,7 +50,9 @@ export class UserOrderPrintComponent implements OnInit {
 
   meanWeightResult() {
     if (this.bill && this.bill.meanWeight && this.weightAdjustStr) {
-      return ' = ' + math.eval(`(${this.bill.meanWeight}) + (${this.weightAdjustStr})`) + ' 斤'
+      const a = math.bignumber(math.eval(this.bill.meanWeight))
+      const b = math.bignumber(math.eval(this.weightAdjustStr))
+      return ' = ' + math.add(a, b) + ' 斤'
     } else {
       return ''
     }
