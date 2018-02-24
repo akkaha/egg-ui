@@ -1,19 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 
+body * {
+  font-size: large;
+}
+
 .nz-content {
   padding: 10px 15px;
 }
+
 .print-container {
   box-shadow: 0px 0px 20px wheat;
-  transition:All 0.4s ease-in-out;
+  transition: All 0.4s ease-in-out;
   cursor: pointer;
 }
+
 .print-container:hover {
-  transform:scale(1.01);
+  transform: scale(1.01);
 }
+
 .printable {
   color: black;
 }
+
 @media print {
   @page {
     size: 234mm 91mm;
@@ -42,5 +50,8 @@
   }
   .print-container {
     box-shadow: 0px 0px;
+  }
+  body * {
+    font-size: 100%;
   }
 }
