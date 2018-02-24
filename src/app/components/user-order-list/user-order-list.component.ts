@@ -6,8 +6,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
 
-import { API_USER_ORDER_DELETE, API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
+import { API_USER_ORDER_DELETE, API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE, API_ORDER_ITEM_BATCH_UPDATE_CAR } from '../../api/egg.api';
+import { ApiRes, ApiResObj } from '../../model/api.model';
 import { ListUserOrderItem, OrderStatus, UserOrder, CarOrder } from '../../model/egg.model';
 import { CarSelectorComponent } from '../car-selector/car-selector.component';
 
@@ -56,14 +56,32 @@ export class UserOrderListComponent implements OnInit {
       width: 640,
       componentParams: {
         onSelect: (selectedCar: CarOrder) => {
-          console.log('select:', selectedCar)
+          const req = {
+            car: selectedCar.id,
+            ids: this.checkedItems.map(item => item.id),
+            isByUser: true,
+          }
+          this.http.post<ApiResObj>(API_ORDER_ITEM_BATCH_UPDATE_CAR, req).subscribe(res => {
+            this.message.success('操作成功')
+          })
         }
       }
     })
-    console.log(this.checkedItems)
   }
   removeFromCar() {
-    console.log(this.checkedItems)
+    this.modal.confirm({
+      title: '移除',
+      content: `确认移除吗?`,
+      onOk: () => {
+        const req = {
+          ids: this.checkedItems.map(item => item.id),
+          isByUser: true,
+        }
+        this.http.post<ApiRes<UserOrder>>(API_ORDER_ITEM_BATCH_UPDATE_CAR, req).subscribe(res => {
+          this.message.success('操作成功')
+        })
+      }
+    })
   }
   refreshStatus() {
     const allChecked = this.list.every(value => value.checked === true)

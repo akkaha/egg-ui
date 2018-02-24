@@ -17,8 +17,9 @@ import {
   API_USER_ORDER_DETAIL,
   API_USER_ORDER_INSERT,
   API_USER_ORDER_UPDATE,
+  API_ORDER_ITEM_BATCH_UPDATE_CAR,
 } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
+import { ApiRes, ApiResObj } from '../../model/api.model';
 import {
   CarOrder,
   clearNewOrderItem,
@@ -36,6 +37,10 @@ import { CarSelectorComponent } from '../car-selector/car-selector.component';
 })
 export class UserOrderComponent implements OnInit {
 
+  allChecked = false
+  indeterminate = false
+  checkedNumber = 0
+  checkedItems: OrderItem[] = []
   orderSubject = new Subject()
   order: UserOrder = {}
   values: OrderItem[] = []
@@ -58,6 +63,65 @@ export class UserOrderComponent implements OnInit {
     private modal: NzModalService,
   ) { }
 
+  addToCar() {
+    this.modal.open({
+      title: '选择车次',
+      content: CarSelectorComponent,
+      onOk() { },
+      onCancel() { },
+      footer: false,
+      width: 640,
+      componentParams: {
+        onSelect: (selectedCar: CarOrder) => {
+          const req = {
+            car: selectedCar.id,
+            ids: this.checkedItems.map(item => item.id),
+            isByUser: false,
+          }
+          this.http.post<ApiResObj>(API_ORDER_ITEM_BATCH_UPDATE_CAR, req).subscribe(res => {
+            this.message.success('操作成功')
+            this.checkedItems.forEach(item => item.car = req.car)
+          })
+        }
+      }
+    })
+  }
+  removeFromCar() {
+    this.modal.confirm({
+      title: '移除',
+      content: `确认移除吗?`,
+      onOk: () => {
+        const req = {
+          ids: this.checkedItems.map(item => item.id),
+          isByUser: false,
+        }
+        this.http.post<ApiRes<UserOrder>>(API_ORDER_ITEM_BATCH_UPDATE_CAR, req).subscribe(res => {
+          this.message.success('操作成功')
+          this.checkedItems.forEach(item => item.car = undefined)
+        })
+      }
+    })
+  }
+  refreshStatus() {
+    const allChecked = this.values.every(value => value.checked === true)
+    const allUnChecked = this.values.every(value => !value.checked)
+    this.allChecked = allChecked
+    this.indeterminate = (!allChecked) && (!allUnChecked)
+    this.checkedItems = this.values.filter(value => value.checked)
+    this.checkedNumber = this.checkedItems.length
+  }
+  checkAll(value) {
+    if (value) {
+      this.values.forEach(item => {
+        item.checked = true
+      })
+    } else {
+      this.values.forEach(item => {
+        item.checked = false
+      })
+    }
+    this.refreshStatus()
+  }
   descCar(car: CarOrder) {
     if (car) {
       return `单号: ${car.id}, 姓名: ${car.driver}, 日期: ${car.createdAt}`

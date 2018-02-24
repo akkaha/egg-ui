@@ -43,6 +43,7 @@ export interface OrderItem {
     createdAt?: string
     updatedAt?: string
     /** use internal */
+    checked?: boolean
     dbStatus?: string
     readonly?: boolean
     status?: string
@@ -124,6 +125,7 @@ export function clearNewOrderItem(item: OrderItem) {
     newItem.subject = undefined
     newItem.createdAt = undefined
     newItem.updatedAt = undefined
+    newItem.checked = undefined
     return newItem
 }
 

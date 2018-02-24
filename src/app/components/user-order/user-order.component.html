@@ -55,9 +55,25 @@
   </div>
   <div style="padding-top:13px;">
     <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
-      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues">
+      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues" [nzShowTitle]="checkedNumber">
+      <div nz-table-title>
+        <div>
+          <div>
+            <span style="margin-left: 8px;" *ngIf="checkedNumber">
+              <span>选择了</span>
+              <span style="color:red;">{{checkedNumber}}</span>
+              <span> 件</span>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="addToCar()">加入车次</a>
+              <a style="padding-left:5px;" href="javascript:void(0);" (click)="removeFromCar()">全部移出车次</a>
+            </span>
+          </div>
+        </div>
+      </div>
       <thead nz-thead>
         <tr>
+          <th nz-th nzCheckbox>
+            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
+          </th>
           <th nz-th style="padding:5px;">
             <span>序号</span>
           </th>
@@ -77,6 +93,9 @@
       </thead>
       <tbody nz-tbody>
         <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
+          <td nz-td nzCheckbox>
+            <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="refreshStatus($event)"></label>
+          </td>
           <td nz-td style="padding:2px;width:50px;">
             <span>{{itemIndex(i)+1}}</span>
           </td>
