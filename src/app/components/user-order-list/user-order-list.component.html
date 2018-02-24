@@ -46,25 +46,25 @@
           <th nz-th nzCheckbox>
             <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
           </th>
-          <th nz-th style="white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>单号</span>
           </th>
-          <th nz-th style="white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>姓名</span>
           </th>
-          <th nz-th style="white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>手机</span>
           </th>
-          <th nz-th style="white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>数量</span>
           </th>
-          <th nz-th style="white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>状态</span>
           </th>
-          <th nz-th style="white-space:nowrap;">
-            <span>创建时间</span>
+          <th nz-th class="nowrap sm-hidden">
+            <span>时间</span>
           </th>
-          <th nz-th style="width:180px;white-space:nowrap;">
+          <th nz-th class="nowrap">
             <span>操作</span>
           </th>
         </tr>
@@ -89,7 +89,7 @@
           <td nz-td>
             <nz-tag [nzColor]="statusColor(item.status)">{{statusName(item.status)}}</nz-tag>
           </td>
-          <td nz-td>
+          <td nz-td class="sm-hidden">
             <span>{{item.createdAt}}</span>
           </td>
           <td nz-td style="padding-left:8px;">

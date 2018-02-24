@@ -10,3 +10,14 @@ i.click-icon:active {
   font-weight: bold;
   cursor: pointer;
 }
+
+.nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media only screen and (max-width: 1026px) {
+  .sm-hidden {
+    display: none;
+  }
+}
