@@ -14,6 +14,8 @@ import { ApiRes } from '../../model/api.model';
 import { CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder, BillItem } from '../../model/egg.model';
 import { OrderPayRes } from '../user-order-pay/user-order-pay.component';
 
+import * as math from 'mathjs'
+
 @Component({
   selector: 'app-user-order-print',
   templateUrl: './user-order-print.component.html',
@@ -46,6 +48,13 @@ export class UserOrderPrintComponent implements OnInit {
   ) {
   }
 
+  meanWeightResult() {
+    if (this.bill && this.bill.meanWeight && this.weightAdjustStr) {
+      return ' = ' + math.eval(`(${this.bill.meanWeight}) + (${this.weightAdjustStr})`) + ' 斤'
+    } else {
+      return ''
+    }
+  }
   paddingStyle() {
     if (this.config && this.config.style) {
       const style = this.config.style

@@ -133,11 +133,11 @@
     <div nz-row [nzGutter]="3" style="padding:5px;">
       <div *ngIf="config.showTotalWeight" class="no-wrap" nz-col nzSpan="5">
         <span>总重:</span>
-        <span class="foot-text">{{bill.totalWeight}}</span>
+        <span class="foot-text">{{bill.totalWeight}} 斤</span>
       </div>
-      <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="5">
+      <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="6">
         <span>平均重量:</span>
-        <span class="foot-text">{{bill.meanWeight}}{{weightAdjustStr}}</span>
+        <span class="foot-text">{{bill.meanWeight}}{{weightAdjustStr}}{{meanWeightResult()}}</span>
       </div>
     </div>
   </div>
