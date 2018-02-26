@@ -86,6 +86,11 @@
           <span>显示总价</span>
         </label>
       </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showRemark" (ngModelChange)="saveToLocal()">
+          <span>显示备注</span>
+        </label>
+      </div>
       <div nz-col [nzSpan]="4">
         <label nz-checkbox [(ngModel)]="config.showFormula" (ngModelChange)="saveToLocal()">
           <span>显示总价算式</span>
@@ -152,6 +157,12 @@
           <span *ngIf="config.showFormula">{{bill.meanPrice}} x {{bill.totalCount}} = </span>
           <span>{{bill.totalPrice}} 元</span>
         </span>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="3" style="padding:5px;">
+      <div *ngIf="config.showRemark" class="no-wrap" nz-col nzSpan="24">
+        <span>备注:</span>
+        <span class="foot-text">{{order.remark}}</span>
       </div>
     </div>
   </div>

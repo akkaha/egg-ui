@@ -76,6 +76,11 @@
           <span>显示均重</span>
         </label>
       </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showRemark" (ngModelChange)="saveToLocal()">
+          <span>显示备注</span>
+        </label>
+      </div>
     </div>
   </div>
   <div class="printable print-container" [ngStyle]="paddingStyle()">
@@ -138,6 +143,12 @@
       <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="6">
         <span>平均重量:</span>
         <span class="foot-text">{{bill.meanWeight}}{{weightAdjustStr}}{{meanWeightResult()}}</span>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="3" style="padding:5px;">
+      <div *ngIf="config.showRemark" class="no-wrap" nz-col nzSpan="24">
+        <span>备注:</span>
+        <span class="foot-text">{{order.remark}}</span>
       </div>
     </div>
   </div>
