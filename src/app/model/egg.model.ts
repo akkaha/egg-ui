@@ -86,6 +86,7 @@ export interface PrintConfig {
   showTotalPrice?: boolean,
   showFormula?: boolean,
   showRemark?: boolean,
+  showCreateTime?: boolean
   style?: {
     top?: string
     left?: string
@@ -105,6 +106,7 @@ export const DefaultPrintConfig = {
   showTotalPrice: true,
   showFormula: false,
   showRemark: true,
+  showCreateTime: true,
   style: {
     top: '0',
     left: '0',

@@ -81,6 +81,11 @@
           <span>显示备注</span>
         </label>
       </div>
+      <div nz-col [nzSpan]="2">
+        <label nz-checkbox [(ngModel)]="config.showCreateTime" (ngModelChange)="saveToLocal()">
+          <span>显示时间</span>
+        </label>
+      </div>
     </div>
   </div>
   <div class="printable print-container" [ngStyle]="paddingStyle()">
@@ -109,13 +114,9 @@
           <span>件数:</span>
           <span class="value-text">{{bill.totalCount}}</span>
         </div>
-        <div class="no-wrap" nz-col nzSpan="4">
+        <div *ngIf="config.showCreateTime" class="no-wrap" nz-col nzSpan="4">
           <span>时间:</span>
           <span class="value-text">{{bill.date}}</span>
-        </div>
-        <div class="no-wrap" nz-col nzSpan="6" style="text-align:right;">
-          <span>车单号:</span>
-          <span class="value-text">{{order.id}}</span>
         </div>
       </div>
     </div>
