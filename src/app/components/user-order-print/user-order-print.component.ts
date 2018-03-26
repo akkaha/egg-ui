@@ -7,14 +7,14 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as math from 'mathjs';
 import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
 
 import { API_USER_ORDER_PAY } from '../../api/egg.api';
 import { ApiRes } from '../../model/api.model';
-import { CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder, BillItem } from '../../model/egg.model';
+import { BillItem, CarOrder, DefaultPrintConfig, OrderBill, PrintConfig, UserOrder } from '../../model/egg.model';
+import { PrintTable, toPrintTables } from '../../model/print.model';
 import { OrderPayRes } from '../user-order-pay/user-order-pay.component';
-
-import * as math from 'mathjs'
 
 @Component({
   selector: 'app-user-order-print',
@@ -36,6 +36,11 @@ export class UserOrderPrintComponent implements OnInit {
 
   CONFIG_KEY = 'user-print-config'
   config: PrintConfig = DefaultPrintConfig
+  tables: PrintTable[] = []
+  tdStyle = {
+    'padding': '5px',
+    'color': 'black'
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -69,6 +74,14 @@ export class UserOrderPrintComponent implements OnInit {
     } else {
       return {}
     }
+  }
+  weightGroupsChange() {
+    if (this.config.weightGroups) {
+      this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
+    } else {
+      this.tables = []
+    }
+    this.saveToLocal()
   }
   saveToLocal() {
     try {
@@ -141,6 +154,10 @@ export class UserOrderPrintComponent implements OnInit {
     } catch (error) {
       num = 10
     }
+    if (this.config.weightGroups) {
+      this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
+    }
+    this.tdStyle['width'] = `${Math.floor(1 / num * 100)}%`
     this.cols.length = num
     this.rows.length = Math.ceil(this.values.length / num)
     this.saveToLocal()
@@ -190,6 +207,9 @@ export class UserOrderPrintComponent implements OnInit {
               const items = this.bill.items
               this.values = items
               this.rows.length = Math.ceil(this.values.length / this.config.colCount)
+              if (this.config.weightGroups) {
+                this.tables = toPrintTables(this.config, this.values, this.weightAdjustStr)
+              }
             }
           }
         })

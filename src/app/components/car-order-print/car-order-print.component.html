@@ -87,6 +87,15 @@
         </label>
       </div>
     </div>
+    <div nz-row style="padding-top:3px;" [nzGutter]="3">
+      <div nz-col [nzSpan]="24">
+        <nz-input [(ngModel)]="config.weightGroups" (ngModelChange)="weightGroupsChange()" [nzPlaceHolder]="'数量分组数字, 从小到大，空格分开'">
+          <ng-template #addOnBefore>
+            <span>按重量划分:</span>
+          </ng-template>
+        </nz-input>
+      </div>
+    </div>
   </div>
   <div class="printable print-container" [ngStyle]="paddingStyle()">
     <div>
@@ -120,7 +129,41 @@
         </div>
       </div>
     </div>
-    <div style="padding-top:3px;">
+    <div *ngIf="tables.length>0" style="padding-top:3px;">
+      <div *ngFor="let t of tables; let ti = index">
+        <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
+          <tbody nz-tbody>
+            <tr *ngFor="let row of t.rows;let r = index">
+              <td *ngFor="let col of t.cols;let c = index" nz-td [ngStyle]="tdStyle">
+                <span>{{t.w(r,c)}}</span>
+              </td>
+            </tr>
+            <ng-container *ngIf="ti===tables.length-1">
+              <tr *ngFor="let row of empRows;let r = index">
+                <td *ngFor="let col of t.cols;let c = index" nz-td>
+                  <span style="visibility: hidden;">-</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </nz-table>
+        <div nz-row [nzGutter]="3" style="padding:5px;padding-bottom:10px;">
+          <div *ngIf="config.showTotalWeight" class="no-wrap" nz-col nzSpan="4">
+            <span>总重:</span>
+            <span class="foot-text">{{t.totalWeight}} 斤</span>
+          </div>
+          <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="6">
+            <span>平均重量:</span>
+            <span class="foot-text">{{t.meanWeight}}{{weightAdjustStr}}{{t.meanWeightResult()}}</span>
+          </div>
+          <div *ngIf="config.showMeanWeight" class="no-wrap" nz-col nzSpan="6">
+            <span>件数:</span>
+            <span class="foot-text">{{t.items.length}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="tables.length<1" style="padding-top:3px;">
       <nz-table #nzTable [nzBordered]="config.showBorder" [nzSize]="'small'" [nzDataSource]="values" [nzIsPagination]="false">
         <tbody nz-tbody>
           <tr *ngFor="let row of rows;let r = index">

@@ -92,7 +92,8 @@ export interface PrintConfig {
     left?: string
     bottom?: string
     right?: string
-  }
+  },
+  weightGroups?: string
 }
 
 export const DefaultPrintConfig = {
@@ -112,7 +113,8 @@ export const DefaultPrintConfig = {
     left: '0',
     bottom: '0',
     right: '0',
-  }
+  },
+  weightGroups: ''
 }
 
 export const DbStatus = {
