@@ -1,6 +1,6 @@
-import * as math from 'mathjs';
+import * as math from 'mathjs'
 
-import { BillItem, PrintConfig } from './egg.model';
+import { BillItem, PrintConfig } from './egg.model'
 
 export class PrintTable {
   totalWeight = '0'
@@ -58,10 +58,19 @@ export function toPrintTables(config: PrintConfig, items: BillItem[], weightAdju
     })
   if (nums.length > 0 && items && items.length > 0) {
     nums = nums.sort(function (numA, numB) { return numA - numB })
+    let weightAdjust: any
+    if (weightAdjustStr) {
+      weightAdjust = math.bignumber(math.eval(weightAdjustStr))
+    }
     items.forEach(item => {
       let i = 0
       for (; i < nums.length; ++i) {
-        const weight = math.bignumber(math.eval(item.weight))
+        let weight: any
+        if (weightAdjust) {
+          weight = math.add(weightAdjust, math.bignumber(math.eval(item.weight)))
+        } else {
+          weight = math.bignumber(math.eval(item.weight))
+        }
         const curWeight = math.bignumber(math.eval(nums[i]))
         if (math.subtract(weight, curWeight) <= 0) {
           break
