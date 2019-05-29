@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
 @Component({
   templateUrl: './admin.component.html',
@@ -8,9 +8,7 @@ import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
 })
 export class AdminComponent implements OnInit {
 
-
   constructor(
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

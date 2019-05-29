@@ -1,17 +1,16 @@
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra, UserOrder } from '../../model/egg.model';
+import { API_USER_ORDER_PAY, API_USER_ORDER_UPDATE } from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { CarOrder, clearOrderField, OrderBill, OrderStatus, PriceExtra, UserOrder } from '../../model/egg.model'
 
 @Component({
   templateUrl: './user-order-pay.component.html',
@@ -35,9 +34,7 @@ export class UserOrderPayComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
@@ -58,9 +55,9 @@ export class UserOrderPayComponent implements OnInit {
   }
   doFinish() {
     this.modal.confirm({
-      title: `确认完成`,
-      content: `编号: ${this.order.id}, 姓名: ${this.order.seller}, 手机: ${this.order.phone}, 数量: ${this.bill.totalCount}.`,
-      onOk: () => {
+      nzTitle: `确认完成`,
+      nzContent: `编号: ${this.order.id}, 姓名: ${this.order.seller}, 手机: ${this.order.phone}, 数量: ${this.bill.totalCount}.`,
+      nzOnOk: () => {
         const toUpdate = clearOrderField(this.order)
         toUpdate.status = OrderStatus.FINISHED
         toUpdate.bill = JSON.stringify(this.bill)
@@ -74,9 +71,9 @@ export class UserOrderPayComponent implements OnInit {
   }
   doNew() {
     this.modal.confirm({
-      title: `确认打回单号: ${this.order.id}`,
-      content: `打回后状态变为 '新增', 需要重新提交.`,
-      onOk: () => {
+      nzTitle: `确认打回单号: ${this.order.id}`,
+      nzContent: `打回后状态变为 '新增', 需要重新提交.`,
+      nzOnOk: () => {
         this.order.status = OrderStatus.NEW
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(res => {
           this.goBack()

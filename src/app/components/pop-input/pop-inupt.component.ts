@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { NzMessageService } from 'ng-zorro-antd'
 
-import { canSpeack, speak, stopSpeak } from '../../util/speach-recognition-synthesis';
+import { canSpeack, speak, stopSpeak } from '../../util/speach-recognition-synthesis'
 
 @Component({
   selector: 'app-pop-input',
@@ -23,10 +22,7 @@ export class PopInuptComponent implements OnInit {
   @Output() enter = new EventEmitter<string>()
 
   constructor(
-    private subject: NzModalSubject,
-    private http: HttpClient,
     private message: NzMessageService,
-    private modal: NzModalService,
   ) { }
 
   soundClick() {

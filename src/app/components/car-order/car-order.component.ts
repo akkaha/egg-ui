@@ -1,14 +1,15 @@
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
-import { Subject } from 'rxjs/Subject';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
+import { Subject } from 'rxjs'
+import { debounceTime } from 'rxjs/operators'
 
 import {
   API_CAR_ORDER_DETAIL,
@@ -17,9 +18,9 @@ import {
   API_ORDER_ITEM_DELETE,
   API_ORDER_ITEM_INSERT,
   API_ORDER_ITEM_UPDATE,
-} from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
-import { CarOrder, clearNewOrderItem, clearOrderField, DbStatus, OrderItem, OrderStatus } from '../../model/egg.model';
+} from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { CarOrder, clearNewOrderItem, clearOrderField, DbStatus, OrderItem, OrderStatus } from '../../model/egg.model'
 
 @Component({
   templateUrl: './car-order.component.html',
@@ -40,7 +41,6 @@ export class CarOrderComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
@@ -63,7 +63,7 @@ export class CarOrderComponent implements OnInit {
   }
   doAddNewItem(weight: string) {
     const orderItemUploadSubject = new Subject<OrderItem>()
-    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+    orderItemUploadSubject.pipe(debounceTime(500)).subscribe(item => {
       this.doUpload(item)
     })
     const newItem = { status: '待上传', subject: orderItemUploadSubject, weight: weight }
@@ -98,9 +98,9 @@ export class CarOrderComponent implements OnInit {
   remove(item: CarOrder, index: number) {
     if (item.id) {
       this.modal.confirm({
-        title: '删除',
-        content: '确认删除?',
-        onOk: () => {
+        nzTitle: '删除',
+        nzContent: '确认删除?',
+        nzOnOk: () => {
           this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_DELETE, { id: item.id }).subscribe(res => {
             this.values.splice(index, 1)
             this.refreshTableData()
@@ -175,7 +175,7 @@ export class CarOrderComponent implements OnInit {
   doAddEmptyItem() {
     // one item to one suject to reduce conflict
     const orderItemUploadSubject = new Subject<OrderItem>()
-    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+    orderItemUploadSubject.pipe(debounceTime(500)).subscribe(item => {
       this.doUpload(item)
     })
     this.values.push({ status: '待上传', subject: orderItemUploadSubject })
@@ -204,9 +204,9 @@ export class CarOrderComponent implements OnInit {
         }
       }
       this.modal.confirm({
-        title: `${warnings.length > 0 ? '数据异常, 请检查后' : ''}确认提交`,
-        content: `编号: ${order.id}, 姓名: ${order.driver}, 手机: ${order.driverPhone}, 数量: ${items.length}. ${warnings.join(',')}`,
-        onOk: () => {
+        nzTitle: `${warnings.length > 0 ? '数据异常, 请检查后' : ''}确认提交`,
+        nzContent: `编号: ${order.id}, 姓名: ${order.driver}, 手机: ${order.driverPhone}, 数量: ${items.length}. ${warnings.join(',')}`,
+        nzOnOk: () => {
           this.order.status = OrderStatus.COMMITED
           this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => {
             this.router.navigate(['/car-order-list'])
@@ -230,13 +230,13 @@ export class CarOrderComponent implements OnInit {
         // edit or view
         this.http.get<ApiRes<{ order: CarOrder, items: OrderItem[] }>>(`${API_CAR_ORDER_DETAIL}/${id}`).subscribe(res => {
           this.order = res.data.order
-          this.orderSubject.debounceTime(1000).subscribe(() => {
+          this.orderSubject.pipe(debounceTime(1000)).subscribe(() => {
             this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => { })
           })
           this.count = res.data.items.length
           for (const item of res.data.items) {
             const orderItemUploadSubject = new Subject<OrderItem>()
-            orderItemUploadSubject.debounceTime(500).subscribe(upItem => {
+            orderItemUploadSubject.pipe(debounceTime(500)).subscribe(upItem => {
               this.doUpload(upItem)
             })
             this.weightCache[item.id] = item.weight.toString()
@@ -254,7 +254,7 @@ export class CarOrderComponent implements OnInit {
         // this.doAddEmptyItem()
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_INSERT, {}).subscribe(res => {
           this.order = res.data
-          this.orderSubject.debounceTime(800).subscribe(() => {
+          this.orderSubject.pipe(debounceTime(800)).subscribe(() => {
             this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => { })
           })
         })

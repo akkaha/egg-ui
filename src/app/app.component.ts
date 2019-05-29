@@ -1,8 +1,4 @@
-import { HttpClient } from '@angular/common/http'
-import { AfterViewInit, Component, Input, Output, OnInit, EventEmitter } from '@angular/core'
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd'
-import { ActivatedRoute, Params } from '@angular/router'
-import { Location } from '@angular/common'
+import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
@@ -13,13 +9,7 @@ import { Router } from '@angular/router'
 export class AppComponent {
 
   constructor(
-    private route: ActivatedRoute,
-    private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
-    private http: HttpClient,
-    private message: NzMessageService,
-    private modal: NzModalService,
   ) { }
 
   newOrder() {

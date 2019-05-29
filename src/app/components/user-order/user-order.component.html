@@ -19,21 +19,26 @@
   </div>
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
     <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.seller" (ngModelChange)="orderChange()">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.seller"
+          (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>姓名:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzMd]="8" [nzXs]="12" [nzSm]="12">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.phone" (ngModelChange)="orderChange()">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.phone"
+          (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>手机号:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzMd]="8" [nzXs]="24" [nzSm]="24">
-      <nz-input style="width:100%;" [nzReadonly]="true" [ngModel]="descCar(defaultCar)" [nzPlaceHolder]="'选择默认车次'">
+      <nz-input-group [nzAddOnBefore]="addOnBefore" [nzAddOnAfter]="addOnAfter">
+        <input nz-input style="width:100%;" [readonly]="true" [ngModel]="descCar(defaultCar)" [placeholder]="'选择默认车次'">
         <ng-template #addOnBefore>
           <span (click)="$event.stopPropagation()">车次:</span>
         </ng-template>
@@ -43,19 +48,22 @@
             <span>更换</span>
           </div>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzSpan]="24" style="padding-top:3px;">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.remark" (ngModelChange)="orderChange()">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.remark"
+          (ngModelChange)="orderChange()">
         <ng-template #addOnBefore>
           <span>备注:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
   </div>
   <div style="padding-top:13px;">
-    <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="values" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
-      nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues" [nzShowTitle]="checkedNumber">
+    <nz-table #nzTable [nzSize]="'small'" [nzData]="values" [(nzPageSize)]="tablePageSize"
+      [(nzPageIndex)]="tablePageIndex" nzShowTotal nzShowSizeChanger [nzPageSizeOptions]="pageSizeSelectorValues"
+      [nzTitle]="checkedNumber">
       <div nz-table-title>
         <div>
           <div>
@@ -72,7 +80,8 @@
       <thead nz-thead>
         <tr>
           <th nz-th nzCheckbox>
-            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate" (ngModelChange)="checkAll($event)"></label>
+            <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate"
+              (ngModelChange)="checkAll($event)"></label>
           </th>
           <th nz-th style="padding:5px;">
             <span>序号</span>
@@ -104,20 +113,22 @@
               <i class="anticon anticon-info-circle-o"></i>
               <span>输入数字, 1.0 ~ 9999.0</span>
             </div>
-            <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" (ngModelChange)="itemChange(item, itemIndex(i))"
-              (nzBlur)="itemBlur(item, i)">
+            <nz-input-group [nzAddOnAfter]="addOnAfter" [nzAddOnAfter]="addOnAfter">
+              <input nz-input [readonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight"
+                (ngModelChange)="itemChange(item, itemIndex(i))" (nzBlur)="itemBlur(item, i)">
               <ng-template #addOnAfter>
                 <span>斤</span>
               </ng-template>
-            </nz-input>
+            </nz-input-group>
           </td>
           <td nz-td>
             <nz-popover [(nzVisible)]="popVisible[itemIndex(i)]" [nzTrigger]="'click'" [nzTitle]="'选择车次'">
-              <button *ngIf="!item.car" nz-popover style="color:lightgray;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
+              <button *ngIf="!item.car" nz-popover style="color:lightgray;" nz-button [nzType]="'dashed'"
+                [nzSize]="'small'" [nzShape]="'circle'">
                 <i class="anticon anticon-car"></i>
               </button>
-              <button *ngIf="item.car" nz-popover style="color:lightgreen;font-weight:bold;" nz-button [nzType]="'dashed'" [nzSize]="'small'"
-                [nzShape]="'circle'">
+              <button *ngIf="item.car" nz-popover style="color:lightgreen;font-weight:bold;" nz-button
+                [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'">
                 <i class="anticon anticon-car"></i>
               </button>
               <ng-template #nzTemplate>
@@ -143,7 +154,8 @@
             <span [ngStyle]="itemStyle(item)">{{item.status}}</span>
           </td>
           <td *ngIf="!readonly" nz-td style="padding:2px 8px;">
-            <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="remove(item, itemIndex(i))">
+            <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'"
+              (click)="remove(item, itemIndex(i))">
               <i class="anticon anticon-delete"></i>
             </button>
           </td>

@@ -10,8 +10,8 @@
   </div>
   <div nz-row [nzGutter]="3" style="padding-bottom:3px;">
     <div nz-col [nzMd]="14" [nzXs]="14" [nzSm]="14">
-      <nz-datepicker [nzAllowClear]="false" [nzDisabled]="readonly || priceEditable" style="width:100%;" [(ngModel)]="_date" (ngModelChange)="dateChange()"
-        [nzPlaceHolder]="'选择要使用的日期的价格'"></nz-datepicker>
+      <nz-datepicker [nzAllowClear]="false" [nzDisabled]="readonly || priceEditable" style="width:100%;"
+        [(ngModel)]="_date" (ngModelChange)="dateChange()" [nzPlaceHolder]="'选择要使用的日期的价格'"></nz-datepicker>
     </div>
     <div *ngIf="!hasPrice() && !priceEditable; else elseBtn" nz-col [nzMd]="10" [nzXs]="10" [nzSm]="10">
       <button style="color:black;width:100%;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doCraete()">
@@ -22,15 +22,18 @@
     <ng-template #elseBtn>
       <div *ngIf="!readonly" nz-col [nzMd]="10" [nzXs]="10" [nzSm]="10">
         <div nz-row [nzGutter]="2">
-          <button *ngIf="!priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doEdit()">
+          <button *ngIf="!priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'"
+            (click)="doEdit()">
             <i class="anticon anticon-plus-square-o"></i>
             <span style="margin:0px;">更改价格配置</span>
           </button>
-          <button *ngIf="priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doAddPrice()">
+          <button *ngIf="priceEditable" style="color:black;" nz-button [nzType]="'default'" [nzSize]="'default'"
+            (click)="doAddPrice()">
             <i class="anticon anticon-plus-square-o"></i>
             <span style="margin:0px;">加点</span>
           </button>
-          <button *ngIf="priceEditable" style="color:green;" nz-button [nzType]="'default'" [nzSize]="'default'" (click)="doSave()">
+          <button *ngIf="priceEditable" style="color:green;" nz-button [nzType]="'default'" [nzSize]="'default'"
+            (click)="doSave()">
             <i class="anticon anticon-save"></i>
             <span style="margin:0px;">保存</span>
           </button>
@@ -46,17 +49,19 @@
   </div>
   <ng-template #elseTable>
     <div nz-row>
-      <nz-input style="width:100%;padding-bottom:2px;" [nzReadonly]="readonly || !priceEditable" [(ngModel)]="priceExtra.weightAdjust">
+      <nz-input-group [nzAddOnBefore]="addOnBefore" [nzAddOnAfter]="addOnAfter">
+        <input nz-input style="width:100%;padding-bottom:2px;" [readonly]="readonly || !priceEditable"
+          [(ngModel)]="priceExtra.weightAdjust">
         <ng-template #addOnBefore>
           <span>重量调整</span>
         </ng-template>
         <ng-template #addOnAfter>
           <span>斤</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-row>
-      <nz-table #nzTable [nzIsPagination]="false" [nzSize]="'small'" [nzDataSource]="prices">
+      <nz-table #nzTable [nzShowPagination]="false" [nzSize]="'small'" [nzData]="prices">
         <thead nz-thead>
           <tr>
             <th nz-th style="padding:5px;">
@@ -73,21 +78,26 @@
         <tbody nz-tbody>
           <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index">
             <td nz-td style="padding:2px;">
-              <nz-input [nzReadonly]="readonly || !priceEditable" nz-tooltip style="width:100%;" [(ngModel)]="item.weight">
+              <nz-input-group [nzAddOnAfter]="addOnAfter">
+                <input nz-input [readonly]="readonly || !priceEditable" nz-tooltip style="width:100%;"
+                  [(ngModel)]="item.weight">
                 <ng-template #addOnAfter>
                   <span>斤</span>
                 </ng-template>
-              </nz-input>
+              </nz-input-group>
             </td>
             <td nz-td style="padding:2px;">
-              <nz-input [nzReadonly]="readonly || !priceEditable" nz-tooltip style="width:100%;" [(ngModel)]="item.price">
+              <nz-input-group [nzAddOnAfter]="addOnAfter">
+                <input nz-input [readonly]="readonly || !priceEditable" nz-tooltip style="width:100%;"
+                  [(ngModel)]="item.price">
                 <ng-template #addOnAfter>
                   <span>元</span>
                 </ng-template>
-              </nz-input>
+              </nz-input-group>
             </td>
             <td *ngIf="!readonly && priceEditable" nz-td style="padding:2px 8px;">
-              <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'" (click)="remove(item, i)">
+              <button style="color:coral;" nz-button [nzType]="'dashed'" [nzSize]="'small'" [nzShape]="'circle'"
+                (click)="remove(item, i)">
                 <i class="anticon anticon-delete"></i>
               </button>
             </td>

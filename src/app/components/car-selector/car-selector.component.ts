@@ -1,14 +1,14 @@
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, Input, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd'
 
-import { API_CAR_ORDER_QUERY } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
-import { CarOrder, OrderStatus } from '../../model/egg.model';
+import { API_CAR_ORDER_QUERY } from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { CarOrder, OrderStatus } from '../../model/egg.model'
 
 @Component({
   templateUrl: './car-selector.component.html',
@@ -46,7 +46,7 @@ export class CarSelectorComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private subject: NzModalSubject,
+    private subject: NzModalRef,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

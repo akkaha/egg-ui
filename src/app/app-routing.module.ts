@@ -1,16 +1,17 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-import { AdminComponent } from './components/admin/admin.component';
-import { HomeComponent } from './components/home/home.component';
-import { UserOrderComponent } from './components/user-order/user-order.component';
-import { UserOrderListComponent } from './components/user-order-list/user-order-list.component';
-import { CarOrderComponent } from './components/car-order/car-order.component';
-import { CarOrderListComponent } from './components/car-order-list/car-order-list.component';
-import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component';
-import { CarOrderPayComponent } from './components/car-order-pay/car-order-pay.component';
-import { UserOrderPrintComponent } from './components/user-order-print/user-order-print.component';
-import { CarOrderPrintComponent } from './components/car-order-print/car-order-print.component';
+
+import { AdminComponent } from './components/admin/admin.component'
+import { CarOrderListComponent } from './components/car-order-list/car-order-list.component'
+import { CarOrderPayComponent } from './components/car-order-pay/car-order-pay.component'
+import { CarOrderPrintComponent } from './components/car-order-print/car-order-print.component'
+import { CarOrderComponent } from './components/car-order/car-order.component'
+import { HomeComponent } from './components/home/home.component'
+import { UserOrderListComponent } from './components/user-order-list/user-order-list.component'
+import { UserOrderPayComponent } from './components/user-order-pay/user-order-pay.component'
+import { UserOrderPrintComponent } from './components/user-order-print/user-order-print.component'
+import { UserOrderComponent } from './components/user-order/user-order.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },

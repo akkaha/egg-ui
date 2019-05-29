@@ -1,25 +1,26 @@
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
-import { Subject } from 'rxjs/Subject';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
+import { Subject } from 'rxjs'
+import { debounceTime } from 'rxjs/operators'
 
 import {
+  API_ORDER_ITEM_BATCH_UPDATE_CAR,
   API_ORDER_ITEM_DELETE,
   API_ORDER_ITEM_INSERT,
   API_ORDER_ITEM_UPDATE,
   API_USER_ORDER_DETAIL,
   API_USER_ORDER_INSERT,
   API_USER_ORDER_UPDATE,
-  API_ORDER_ITEM_BATCH_UPDATE_CAR,
-} from '../../api/egg.api';
-import { ApiRes, ApiResObj } from '../../model/api.model';
+} from '../../api/egg.api'
+import { ApiRes, ApiResObj } from '../../model/api.model'
 import {
   CarOrder,
   clearNewOrderItem,
@@ -28,8 +29,8 @@ import {
   OrderItem,
   OrderStatus,
   UserOrder,
-} from '../../model/egg.model';
-import { CarSelectorComponent } from '../car-selector/car-selector.component';
+} from '../../model/egg.model'
+import { CarSelectorComponent } from '../car-selector/car-selector.component'
 
 @Component({
   templateUrl: './user-order.component.html',
@@ -57,21 +58,19 @@ export class UserOrderComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
   ) { }
 
   addToCar() {
-    this.modal.open({
-      title: '选择车次',
-      content: CarSelectorComponent,
-      onOk() { },
-      onCancel() { },
-      footer: false,
-      width: 640,
-      componentParams: {
+    this.modal.create({
+      nzTitle: '选择车次',
+      nzContent: CarSelectorComponent,
+      nzOnOk() { },
+      nzOnCancel() { },
+      nzWidth: 640,
+      nzComponentParams: {
         onSelect: (selectedCar: CarOrder) => {
           const req = {
             car: selectedCar.id,
@@ -88,9 +87,9 @@ export class UserOrderComponent implements OnInit {
   }
   removeFromCar() {
     this.modal.confirm({
-      title: '移除',
-      content: `确认移除吗?`,
-      onOk: () => {
+      nzTitle: '移除',
+      nzContent: `确认移除吗?`,
+      nzOnOk: () => {
         const req = {
           ids: this.checkedItems.map(item => item.id),
           isByUser: false,
@@ -130,13 +129,12 @@ export class UserOrderComponent implements OnInit {
     }
   }
   selectCar() {
-    this.modal.open({
-      title: '选择默认车次(本单中的单位默认加入该车次)',
-      content: CarSelectorComponent,
-      onOk() { },
-      onCancel() { },
-      footer: false,
-      componentParams: {
+    this.modal.create({
+      nzTitle: '选择默认车次(本单中的单位默认加入该车次)',
+      nzContent: CarSelectorComponent,
+      nzOnOk() { },
+      nzOnCancel() { },
+      nzComponentParams: {
         data: this.defaultCar,
         onSelect: (selectedCar: CarOrder) => {
           this.defaultCar = selectedCar
@@ -156,13 +154,12 @@ export class UserOrderComponent implements OnInit {
       }
     }
     this.popVisible[index] = false
-    this.modal.open({
-      title: '选择车次(只是该单位)',
-      content: CarSelectorComponent,
-      onOk() { },
-      onCancel() { },
-      footer: false,
-      componentParams: {
+    this.modal.create({
+      nzTitle: '选择车次(只是该单位)',
+      nzContent: CarSelectorComponent,
+      nzOnOk() { },
+      nzOnCancel() { },
+      nzComponentParams: {
         data: carOrder,
         onSelect: (selectedCar: CarOrder) => {
           const isNewCar = item.car !== selectedCar.id
@@ -223,9 +220,9 @@ export class UserOrderComponent implements OnInit {
   remove(item: UserOrder, index: number) {
     if (item.id) {
       this.modal.confirm({
-        title: '删除',
-        content: '确认删除?',
-        onOk: () => {
+        nzTitle: '删除',
+        nzContent: '确认删除?',
+        nzOnOk: () => {
           this.http.post<ApiRes<OrderItem>>(API_ORDER_ITEM_DELETE, { id: item.id }).subscribe(res => {
             this.values.splice(index, 1)
             this.refreshTableData()
@@ -302,7 +299,7 @@ export class UserOrderComponent implements OnInit {
   }
   doAddNewItem(weight: string) {
     const orderItemUploadSubject = new Subject<OrderItem>()
-    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+    orderItemUploadSubject.pipe(debounceTime(500)).subscribe(item => {
       this.doUpload(item)
     })
     const newItem = { status: '待上传', subject: orderItemUploadSubject, weight: weight }
@@ -314,7 +311,7 @@ export class UserOrderComponent implements OnInit {
   doAddEmptyItem() {
     // one item to one suject to reduce conflict
     const orderItemUploadSubject = new Subject<OrderItem>()
-    orderItemUploadSubject.debounceTime(500).subscribe(item => {
+    orderItemUploadSubject.pipe(debounceTime(500)).subscribe(item => {
       this.doUpload(item)
     })
     this.values.push({ status: '待上传', subject: orderItemUploadSubject })
@@ -344,9 +341,9 @@ export class UserOrderComponent implements OnInit {
         }
       }
       this.modal.confirm({
-        title: `${warnings.length > 0 ? '数据异常, 请检查后' : ''}确认提交`,
-        content: `编号: ${order.id}, 姓名: ${order.seller}, 手机: ${order.phone}, 数量: ${items.length}. ${warnings.join(',')}`,
-        onOk: () => {
+        nzTitle: `${warnings.length > 0 ? '数据异常, 请检查后' : ''}确认提交`,
+        nzContent: `编号: ${order.id}, 姓名: ${order.seller}, 手机: ${order.phone}, 数量: ${items.length}. ${warnings.join(',')}`,
+        nzOnOk: () => {
           this.order.status = OrderStatus.COMMITED
           this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => {
             this.router.navigate(['/user-order-list'])
@@ -388,13 +385,13 @@ export class UserOrderComponent implements OnInit {
             this.defaultCar = res.data.car
           }
           this.order = res.data.order
-          this.orderSubject.debounceTime(1000).subscribe(() => {
+          this.orderSubject.pipe(debounceTime(1000)).subscribe(() => {
             this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, clearOrderField(this.order)).subscribe(updateRes => { })
           })
           this.count = res.data.items.length
           for (const item of res.data.items) {
             const orderItemUploadSubject = new Subject<OrderItem>()
-            orderItemUploadSubject.debounceTime(500).subscribe(uploadItem => {
+            orderItemUploadSubject.pipe(debounceTime(500)).subscribe(uploadItem => {
               this.doUpload(uploadItem)
             })
             this.weightCache[item.id] = item.weight.toString()
@@ -412,7 +409,7 @@ export class UserOrderComponent implements OnInit {
         // this.doAddEmptyItem()
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_INSERT, {}).subscribe(res => {
           this.order = res.data
-          this.orderSubject.debounceTime(800).subscribe(() => {
+          this.orderSubject.pipe(debounceTime(800)).subscribe(() => {
             this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_UPDATE, this.order).subscribe(updateRes => { })
           })
         })

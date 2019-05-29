@@ -39,39 +39,44 @@
   </div>
   <div nz-row [nzGutter]="3" style="padding-top:7px;">
     <div nz-col [nzSpan]="8">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driver">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.driver" />
         <ng-template #addOnBefore>
           <span>姓名:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzSpan]="8">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.driverPhone">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.driverPhone" />
         <ng-template #addOnBefore>
           <span>手机号:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzSpan]="8">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.serial">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.serial" />
         <ng-template #addOnBefore>
           <span>车牌:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
     <div nz-col [nzSpan]="24" style="padding-top:3px;">
-      <nz-input style="width:100%;" [nzReadonly]="readonly" [(ngModel)]="order.remark">
+      <nz-input-group [nzAddOnBefore]="addOnBefore">
+        <input nz-input style="width:100%;" [readonly]="readonly" [(ngModel)]="order.remark" />
         <ng-template #addOnBefore>
           <span>备注:</span>
         </ng-template>
-      </nz-input>
+      </nz-input-group>
     </div>
   </div>
   <div style="padding-top:10px;">
     <div nz-row [nzGutter]="3" style="display:flex;flex-wrap:wrap-reverse;">
       <div style="padding-top:3px;" nz-col [nzMd]="16" [nzXs]="24" [nzSm]="24">
-        <nz-table #nzTable [nzSize]="'small'" [nzDataSource]="bill.items" [(nzPageSize)]="tablePageSize" [(nzPageIndex)]="tablePageIndex"
-          nzShowTotal nzShowSizeChanger [nzIsPageIndexReset]="false" [nzPageSizeSelectorValues]="pageSizeSelectorValues">
+        <nz-table #nzTable [nzSize]="'small'" [nzData]="bill.items" [(nzPageSize)]="tablePageSize"
+          [(nzPageIndex)]="tablePageIndex" nzShowTotal nzShowSizeChanger
+          [nzPageSizeOptions]="pageSizeSelectorValues">
           <thead nz-thead>
             <tr>
               <th nz-th style="padding:5px;">
@@ -91,11 +96,12 @@
                 <span>{{itemIndex(i)+1}}</span>
               </td>
               <td nz-td style="padding:2px;">
-                <nz-input [nzReadonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight">
+                <nz-input-group [nzAddOnBefore]="addOnBefore">
+                  <input nz-input [readonly]="readonly" nz-tooltip style="width:100%;" [(ngModel)]="item.weight" />
                   <ng-template #addOnAfter>
                     <span>{{weightAdjustStr}}斤</span>
                   </ng-template>
-                </nz-input>
+                </nz-input-group>
               </td>
               <td nz-td>
                 <div *ngIf="item.price" style="color:darkgreen;">

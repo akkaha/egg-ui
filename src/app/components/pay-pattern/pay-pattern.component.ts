@@ -1,19 +1,19 @@
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import * as moment from 'moment'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_ORDER_BILL_INSERT, API_ORDER_BILL_QUERY } from '../../api/egg.api';
-import { ApiRes, ApiResObj } from '../../model/api.model';
-import { BillItem, OrderBill, PriceExtra } from '../../model/egg.model';
-import { OrderPayRes } from '../user-order-pay/user-order-pay.component';
+import { API_ORDER_BILL_INSERT, API_ORDER_BILL_QUERY } from '../../api/egg.api'
+import { ApiRes, ApiResObj } from '../../model/api.model'
+import { BillItem, OrderBill, PriceExtra } from '../../model/egg.model'
+import { OrderPayRes } from '../user-order-pay/user-order-pay.component'
 
 @Component({
   selector: 'app-pay-pattern',
@@ -61,7 +61,6 @@ export class PayPatternComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,

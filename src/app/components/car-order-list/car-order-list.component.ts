@@ -1,14 +1,14 @@
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_CAR_ORDER_DELETE, API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE } from '../../api/egg.api';
-import { ApiRes } from '../../model/api.model';
-import { CarOrder, OrderStatus } from '../../model/egg.model';
+import { API_CAR_ORDER_DELETE, API_CAR_ORDER_QUERY, API_CAR_ORDER_UPDATE } from '../../api/egg.api'
+import { ApiRes } from '../../model/api.model'
+import { CarOrder, OrderStatus } from '../../model/egg.model'
 
 @Component({
   templateUrl: './car-order-list.component.html',
@@ -33,7 +33,6 @@ export class CarOrderListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
@@ -143,9 +142,9 @@ export class CarOrderListComponent implements OnInit {
   }
   doDelete(item: CarOrder) {
     this.modal.confirm({
-      title: '删除',
-      content: `确认删除吗,删除后所有关联数据将不可找回?`,
-      onOk: () => {
+      nzTitle: '删除',
+      nzContent: `确认删除吗,删除后所有关联数据将不可找回?`,
+      nzOnOk: () => {
         const order: CarOrder = { id: item.id, status: OrderStatus.NEW }
         this.http.post<ApiRes<CarOrder>>(API_CAR_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')

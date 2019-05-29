@@ -1,15 +1,20 @@
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/switchMap'
 
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NzMessageService, NzModalService, NzModalSubject } from 'ng-zorro-antd';
+import { Location } from '@angular/common'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router'
+import { NzMessageService, NzModalService } from 'ng-zorro-antd'
 
-import { API_USER_ORDER_DELETE, API_USER_ORDER_QUERY, API_USER_ORDER_UPDATE, API_ORDER_ITEM_BATCH_UPDATE_CAR } from '../../api/egg.api';
-import { ApiRes, ApiResObj } from '../../model/api.model';
-import { ListUserOrderItem, OrderStatus, UserOrder, CarOrder } from '../../model/egg.model';
-import { CarSelectorComponent } from '../car-selector/car-selector.component';
+import {
+  API_ORDER_ITEM_BATCH_UPDATE_CAR,
+  API_USER_ORDER_DELETE,
+  API_USER_ORDER_QUERY,
+  API_USER_ORDER_UPDATE,
+} from '../../api/egg.api'
+import { ApiRes, ApiResObj } from '../../model/api.model'
+import { CarOrder, ListUserOrderItem, OrderStatus, UserOrder } from '../../model/egg.model'
+import { CarSelectorComponent } from '../car-selector/car-selector.component'
 
 @Component({
   templateUrl: './user-order-list.component.html',
@@ -40,21 +45,19 @@ export class UserOrderListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private subject: NzModalSubject,
     private http: HttpClient,
     private message: NzMessageService,
     private modal: NzModalService,
   ) { }
 
   addToCar() {
-    this.modal.open({
-      title: '选择车次',
-      content: CarSelectorComponent,
-      onOk() { },
-      onCancel() { },
-      footer: false,
-      width: 640,
-      componentParams: {
+    this.modal.create({
+      nzTitle: '选择车次',
+      nzContent: CarSelectorComponent,
+      nzOnOk() { },
+      nzOnCancel() { },
+      nzWidth: 640,
+      nzComponentParams: {
         onSelect: (selectedCar: CarOrder) => {
           const req = {
             car: selectedCar.id,
@@ -70,9 +73,9 @@ export class UserOrderListComponent implements OnInit {
   }
   removeFromCar() {
     this.modal.confirm({
-      title: '移除',
-      content: `确认移除吗?`,
-      onOk: () => {
+      nzTitle: '移除',
+      nzContent: `确认移除吗?`,
+      nzOnOk: () => {
         const req = {
           ids: this.checkedItems.map(item => item.id),
           isByUser: true,
@@ -215,9 +218,9 @@ export class UserOrderListComponent implements OnInit {
   }
   doDelete(item: UserOrder) {
     this.modal.confirm({
-      title: '删除',
-      content: `确认删除吗,删除后所有关联数据将不可找回?`,
-      onOk: () => {
+      nzTitle: '删除',
+      nzContent: `确认删除吗,删除后所有关联数据将不可找回?`,
+      nzOnOk: () => {
         const order: UserOrder = { id: item.id, status: OrderStatus.NEW }
         this.http.post<ApiRes<UserOrder>>(API_USER_ORDER_DELETE, order).subscribe(res => {
           this.message.success('操作成功')
